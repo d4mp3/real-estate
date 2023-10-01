@@ -1,0 +1,62 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+  }
+
+.container {
+    height: 100vh;
+    display: grid;
+    overflow: auto; 
+    grid-template-columns: 1fr 1fr 1fr; 
+    grid-template-rows: 1fr 1fr 1fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      "side-bar map map"
+      "side-bar map map"
+      "side-bar map map";
+  }
+
+.sideBar { 
+    grid-area: side-bar; 
+    overflow-y: scroll;
+}
+  
+.map { 
+    grid-area: map; 
+}
+
+.popupImg {
+    height: 14rem;
+    width: 18rem;
+}
+
+.popupBtn {
+    width: 100%;
+}
+
+.card {
+    position: relative;
+    border: 1.5px solid black;
+    border-radius: 1rem;    
+    display: flex;
+    flex-direction: column;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+.cardTitle{
+    margin: 1rem;
+    font-size: 2rem;
+}
+
+.cardPrice {
+    position: absolute;
+    font-weight: bold;
+    background-color: brown;
+    z-index: 1000;
+    color: white;
+    top: 8rem;
+    left: 1rem;
+    padding: 5px;
+}

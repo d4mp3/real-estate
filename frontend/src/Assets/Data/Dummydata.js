@@ -36,7 +36,7 @@ const myListings = [
 		parking: true,
 		location: {
 			type: "Point",
-			coordinates: [51.541078280085614, -0.15871891189601836],
+			coordinates: [52.237049, 21.017532],
 		},
 		picture1: image3,
 	},
@@ -59,7 +59,7 @@ const myListings = [
 		parking: true,
 		location: {
 			type: "Point",
-			coordinates: [51.53796304347224, -0.10189113898462315],
+			coordinates: [52.229770, 21.011780],
 		},
 		picture1: image1,
 	},
@@ -82,7 +82,7 @@ const myListings = [
 		parking: false,
 		location: {
 			type: "Point",
-			coordinates: [51.5117212390057, -0.30023786193990754],
+			coordinates: [52.235474, 21.041960],
 		},
 		picture1: image5,
 	},
@@ -105,7 +105,7 @@ const myListings = [
 		parking: false,
 		location: {
 			type: "Point",
-			coordinates: [51.49463731028351, -0.11398489688921488],
+			coordinates: [52.219370, 21.005073],
 		},
 		picture1: image4,
 	},
@@ -129,7 +129,7 @@ const myListings = [
 		parking: true,
 		location: {
 			type: "Point",
-			coordinates: [51.6538576327809, -0.07420868326088129],
+			coordinates: [52.213335, 21.033512],
 		},
 		picture1: image7,
 	},
@@ -153,7 +153,7 @@ const myListings = [
 		parking: false,
 		location: {
 			type: "Point",
-			coordinates: [51.650243284477725, -0.19749483373918514],
+			coordinates: [52.247287, 21.024122],
 		},
 		picture1: image12,
 	},
@@ -177,7 +177,7 @@ const myListings = [
 		parking: false,
 		location: {
 			type: "Point",
-			coordinates: [51.443269130828206, 0.15064128781893238],
+			coordinates: [52.222378, 21.005864],
 		},
 		picture1: image15,
 	},
@@ -201,7 +201,7 @@ const myListings = [
 		parking: true,
 		location: {
 			type: "Point",
-			coordinates: [51.381870798317266, -0.10379988107433152],
+			coordinates: [52.232855, 21.018131],
 		},
 		picture1: image2,
 	},
@@ -225,7 +225,7 @@ const myListings = [
 		parking: true,
 		location: {
 			type: "Point",
-			coordinates: [51.462524898313, -0.37050279898417415],
+			coordinates: [52.217557, 21.011912],
 		},
 		picture1: image8,
 	},
@@ -249,7 +249,7 @@ const myListings = [
 		parking: true,
 		location: {
 			type: "Point",
-			coordinates: [51.552498305814616, -0.047976472350245256],
+			coordinates: [52.230078, 21.012396],
 		},
 		picture1: image16,
 	},
@@ -273,7 +273,7 @@ const myListings = [
 		parking: true,
 		location: {
 			type: "Point",
-			coordinates: [51.41817844947587, 0.010381344327546399],
+			coordinates: [52.213662, 21.036572],
 		},
 		picture1: image10,
 	},
@@ -297,7 +297,7 @@ const myListings = [
 		parking: true,
 		location: {
 			type: "Point",
-			coordinates: [51.417642743624164, -0.18389246063474793],
+			coordinates: [52.244508, 21.036207],
 		},
 		picture1: image14,
 	},
@@ -321,7 +321,7 @@ const myListings = [
 		parking: true,
 		location: {
 			type: "Point",
-			coordinates: [51.5523192864514, 0.25604463764059254],
+			coordinates: [52.217973, 20.986523],
 		},
 		picture1: image9,
 	},
@@ -345,7 +345,7 @@ const myListings = [
 		parking: false,
 		location: {
 			type: "Point",
-			coordinates: [51.458244987751215, -0.18861599281323665],
+			coordinates: [52.221537, 21.007447],
 		},
 		picture1: image1,
 	},
@@ -369,7 +369,7 @@ const myListings = [
 		parking: true,
 		location: {
 			type: "Point",
-			coordinates: [51.58701995760913, 0.05893467157444739],
+			coordinates: [52.234506, 21.045363],
 		},
 		picture1: image6,
 	},

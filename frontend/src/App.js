@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
 
 // Components
@@ -13,7 +12,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      <CssBaseline />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
