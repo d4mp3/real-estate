@@ -6,7 +6,7 @@ import './App.css';
 import Home from './Components/Home';
 import Login from './Components/Login';
 import Listings from './Components/Listings';
-import Header from './Components/Header';
+import Navbar from './Components/Navbar';
 
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
   return (
     <BrowserRouter>
       <CssBaseline />
-      <Header />
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
