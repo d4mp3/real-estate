@@ -2,10 +2,6 @@ from random import choices
 from django.contrib.gis.db import models
 from django.utils import timezone
 from django.contrib.gis.geos import Point
-from django.contrib.auth.models import AbstractUser
-
-class User(AbstractUser):
-    email = models.EmailField(unique=True)
 
 class Listing(models.Model):
     title = models.CharField(max_length=150)
@@ -42,3 +38,6 @@ class Listing(models.Model):
     parking = models.BooleanField(default=False)
     date_posted = models.DateTimeField(default=timezone.now)
     location = models.PointField(blank=True, null=True, srid=4326)
+
+    def __str__(self):
+        return self.title
