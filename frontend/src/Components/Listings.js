@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Axios from 'axios';
 import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import styles from './Listings.module.css';
 
 // MUI
-import { Card, CardHeader, CardMedia, CardContent, Typography } from '@mui/material';
+import { Card, CardHeader, CardMedia, CardContent, Typography, CircularProgress } from '@mui/material';
 
 
 // Map icons
@@ -18,6 +19,11 @@ import myListings from '../Assets/Data/Dummydata';
 import polygonOne from './Shape';
 
 function Listings() {
+
+  // fetch('http://localhost:8000/api/listings')
+  // .then(response=> response.json())
+  // .then(data=>console.log(data));
+
   const houseIcon = new Icon({
     iconUrl: houseIconPng,
     iconSize: [40, 40],
@@ -39,6 +45,38 @@ function Listings() {
   function GoEast() {
     setLatitude(12);
     setLongitude(52);
+  }
+
+  const [allListings, setAllListings] = useState([]);
+  const [dataIsLoading, setDataIsLoading] = useState(true);
+
+  useEffect(() => {
+    const source = Axios.CancelToken.source();
+    async function GetAllListings() {
+      try {
+        const response = await Axios.get("http://localhost:8000/api/listings", {cancelToken: source.token});
+        setAllListings(response.data);
+        setDataIsLoading(false);
+      } catch(error) {
+        console.log(error);
+      }
+     
+    } 
+    GetAllListings();
+    return () => {
+      source.cancel()
+    }
+  }, []);
+  
+  if (dataIsLoading === false) {
+    console.log(allListings[0].location);
+  }
+
+  if (dataIsLoading === true) {
+    return (<div className={styles.circularProgress}>
+              <CircularProgress />
+            </div>
+    );
   }
 
   return (
@@ -68,9 +106,7 @@ function Listings() {
                 </Typography>
               </CardContent>
 
-                <CardHeader
-
-                // action={
+                <CardHeadercircularProgress
                 //   <IconButton aria-label="settings">
                 //     <MoreVertIcon />
                 //   </IconButton>
