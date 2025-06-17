@@ -6,6 +6,9 @@ from django.utils import timezone
 
 
 class Listing(models.Model):
+    def __str__(self):
+        return self.title
+
     title = models.CharField(max_length=150)
     description = models.TextField()
     choices_area = (
