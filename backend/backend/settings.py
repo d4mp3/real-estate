@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'listings.apps.ListingsConfig',
     'users.apps.UsersConfig',
+    'rest_framework',
+    'rest_framework_gis',
 ]
 
 MIDDLEWARE = [
