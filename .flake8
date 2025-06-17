@@ -1,0 +1,11 @@
+[flake8]
+max-line-length = 120
+ignore = E701, W503
+exclude =
+    .history
+    .idea
+    .vscode
+    .git
+    .mypy_cache
+    .ruff_cache
+    __pycache__
