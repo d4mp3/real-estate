@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 // Components
 import Header from "./Components/Header";
 import Home from "./Components/Home";
+import Listings from "./Components/Listings";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           {/* <Route path="/login" element={<Login />} /> */}
-          {/* <Route path="/listings" element={<Listings />} /> */}
+          <Route path="/listings" element={<Listings />} />
         </Routes>
       </BrowserRouter>
     </StyledEngineProvider>
