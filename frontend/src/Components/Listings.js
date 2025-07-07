@@ -12,7 +12,7 @@ import houseIconPng from './Assets/Mapicons/house.png';
 import officeIconPng from './Assets/Mapicons/office.png';
 
 // Assets
-import img1 from './Assets/img1.jpg';
+import myListings from './Assets/Data/Dummydata';
 
 function Listings() {
   const houseIcon = new Icon({
@@ -46,11 +46,11 @@ function Listings() {
 
   return (
     <Grid container>
-      <Grid item size={{xs: 4}}>
+      <Grid item size={{xs: 3}}>
         <Button onClick={GoEast}>GO EAST</Button>
         <Button onClick={GoCenter}>GO CENTER</Button>
       </Grid>
-      <Grid item size={{xs: 8}}>
+      <Grid item size={{xs: 9}}>
         <AppBar position="sticky">
           <div className="leaflet-container">
             <MapContainer center={[51.505, -0.09]} zoom={14} scrollWheelZoom={true}>
@@ -58,14 +58,42 @@ function Listings() {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <Marker icon={officeIcon} position={[latitude, longitude]}>
+            {myListings.map((listing) => {
+              function IconDisplay(){
+                if (listing.listing_type === 'House') {
+                  return houseIcon;
+                } else if (listing.listing_type === 'Apartment') {
+                  return apartmentIcon;
+                } else if (listing.listing_type === 'Office') {
+                  return officeIcon;
+                }
+              }
+              return (
+                <Marker
+                  key={listing.id}
+                  icon={IconDisplay()}
+                  position={[
+                    listing.location.coordinates[0],
+                    listing.location.coordinates[1]
+                  ]}>
+                  <Popup>
+                    <Typography variant="h4">{listing.title}</Typography>
+                    <img src={listing.picture1} alt="Example" style={{ width: '18rem', height: '14rem' }} />
+                    <Typography variant="body1">{listing.description.substring(0, 150)}...</Typography>
+                    <Button variant="contained" fullWidth>Details</Button>
+                  </Popup>
+                </Marker>
+              )
+            })}
+
+              {/* <Marker icon={officeIcon} position={[latitude, longitude]}>
                 <Popup>
                   <Typography variant="h4">A title</Typography>
                   <img src={img1} alt="Example" style={{ width: '18rem', height: '14rem' }} />
                   <Typography variant="body1">This is some text below the title</Typography>
                   <Button variant="contained" fullWidth>A link</Button>
                 </Popup>
-              </Marker>
+              </Marker> */}
             </MapContainer>
           </div>
         </AppBar>
