@@ -1,10 +1,8 @@
-import { useState } from 'react';
-
 // React leaflet
 import { Icon } from 'leaflet';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 // MUI
-import { AppBar, Button, Grid, Typography } from '@mui/material';
+import { AppBar, Button, Card, CardContent, CardHeader, CardMedia, Grid, Typography } from '@mui/material';
 
 // Map icons
 import apartmentIconPng from './Assets/Mapicons/apartment.png';
@@ -30,27 +28,82 @@ function Listings() {
     iconSize: [40, 40],
   });
 
-
-  const [latitude, setLatitude] = useState(51.48767277304141);
-  const [longitude, setLongitude] = useState(-0.12727038455739081);
-
-  const GoEast = () => {
-    setLatitude(51.46567224413489);
-    setLongitude(0.25727038455739081);
-  };
-
-  const GoCenter = () => {
-    setLatitude(51.48767277304141);
-    setLongitude(-0.12727038455739081);
+  // Shared styles for price display
+  const priceTagStyles = {
+    position: 'absolute',
+    backgroundColor: 'green',
+    zIndex: '1000',
+    color: 'white',
+    top: '10px',
+    left: '20px',
+    padding: '5px',
+    borderRadius: '4px',
   };
 
   return (
     <Grid container>
       <Grid item size={{xs: 3}}>
-        <Button onClick={GoEast}>GO EAST</Button>
-        <Button onClick={GoCenter}>GO CENTER</Button>
+        {myListings.map((listing) => {
+          return (
+            <Card
+              key={listing.id}
+              sx={{
+                margin: '0.5rem',
+                border: '1px solid black',
+                position: 'relative',
+              }}
+            >
+              <CardHeader
+                // action={
+                //   <IconButton aria-label="settings">
+                //     <MoreVertIcon />
+                //   </IconButton>
+                // }
+                title={listing.title}
+              />
+              <div style={{ position: 'relative' }}>
+                <CardMedia
+                  sx={{
+                    paddingRight: '1rem',
+                    paddingLeft: '1rem',
+                    height: '20rem',
+                    width: '30rem',
+                  }}
+                  component="img"
+                  image={listing.picture1}
+                  alt={listing.title}
+                />
+                {listing.property_status === "Sale" ? (
+                  <Typography sx={priceTagStyles}>
+                    {listing.listing_type}: $
+                    {listing.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  </Typography>
+                ) : (
+                  <Typography sx={priceTagStyles}>
+                    {listing.listing_type}: $
+                    {listing.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    / {listing.rental_frequency}
+                  </Typography>
+                )}
+              </div>
+              <CardContent>
+                <Typography variant="body2">
+                  {listing.description.substring(0, 2000)}...
+                </Typography>
+              </CardContent>
+              {/* <CardActions disableSpacing>
+                <IconButton aria-label="add to favorites">
+                  <FavoriteIcon />
+                </IconButton>
+                <IconButton aria-label="share">
+                  <ShareIcon />
+                </IconButton>
+              </CardActions> */}
+            </Card>
+          );
+        })}
       </Grid>
-      <Grid item size={{xs: 9}}>
+      <Grid item size={{xs: 9}} style={{marginTop: '0.5rem'}}>
         <AppBar position="sticky">
           <div className="leaflet-container">
             <MapContainer center={[51.505, -0.09]} zoom={14} scrollWheelZoom={true}>
