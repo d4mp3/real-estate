@@ -26,6 +26,11 @@ class ListingsForm(forms.ModelForm):
             'location',
             'latitude',
             'longitude',
+            'picture1',
+            'picture2',
+            'picture3',
+            'picture4',
+            'picture5',
         ]
 
     latitude = forms.FloatField()
@@ -43,7 +48,7 @@ class ListingsForm(forms.ModelForm):
         data = super().clean()
         latitude = data.pop('latitude')
         longitude = data.pop('longitude')
-        data['location'] = Point(longitude, latitude, srid=4326)
+        data['location'] = Point(latitude, longitude, srid=4326)
 
         return data
 
