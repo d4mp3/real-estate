@@ -1,18 +1,25 @@
+import Axios from 'axios';
+import { useEffect, useState } from 'react';
+
 // React leaflet
 import { Icon } from 'leaflet';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 // MUI
-import { AppBar, Button, Card, CardContent, CardHeader, CardMedia, Grid, Typography } from '@mui/material';
+import { AppBar, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, Grid, Typography } from '@mui/material';
 
 // Map icons
 import apartmentIconPng from './Assets/Mapicons/apartment.png';
 import houseIconPng from './Assets/Mapicons/house.png';
 import officeIconPng from './Assets/Mapicons/office.png';
 
-// Assets
-import myListings from './Assets/Data/Dummydata';
 
 function Listings() {
+
+  // fetch('http://localhost:8000/api/listings/').then(response => response.json()).then(data => {
+  //   console.log(data);
+
+  // })
+
   const houseIcon = new Icon({
     iconUrl: houseIconPng,
     iconSize: [40, 40],
@@ -40,10 +47,49 @@ function Listings() {
     borderRadius: '4px',
   };
 
+  const [allListings, setAllListings] = useState([]);
+  const [dataIsLoading, setDataIsLoading] = useState(true);
+
+  useEffect(() => {
+    const source = Axios.CancelToken.source();
+    async function getAllListings() {
+      try {
+        const response = await Axios.get('http://localhost:8000/api/listings/', {
+          cancelToken: source.token
+        });
+        setAllListings(response.data);
+        setDataIsLoading(false);
+      } catch (error) {
+        // console.error("Error fetching listings:", error);
+      }
+    }
+    getAllListings();
+    return () => {
+      source.cancel();
+    }
+  }, []);
+
+  if (!dataIsLoading) {
+    console.log(allListings[0].location);
+  }
+
+  if (dataIsLoading) {
+    return (
+      <Grid
+        container
+        justifyContent='center'
+        alignItems='center'
+        style={{ height: '100vh' }}
+      >
+        <CircularProgress />
+      </Grid>
+    );
+  }
+
   return (
     <Grid container>
       <Grid item size={{xs: 3}}>
-        {myListings.map((listing) => {
+        {allListings.map((listing) => {
           return (
             <Card
               key={listing.id}
@@ -111,7 +157,7 @@ function Listings() {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-            {myListings.map((listing) => {
+            {allListings.map((listing) => {
               function IconDisplay(){
                 if (listing.listing_type === 'House') {
                   return houseIcon;
