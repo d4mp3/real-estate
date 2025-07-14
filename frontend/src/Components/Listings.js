@@ -35,8 +35,21 @@ function Listings() {
     iconSize: [40, 40],
   });
 
+   const cardStyle = {
+     margin: '0.5rem',
+     border: '1px solid black',
+     position: 'relative',
+   };
+
+   const pictureStyle = {
+     paddingRight: '1rem',
+     paddingLeft: '1rem',
+     height: '20rem',
+     width: '30rem',
+   };
+
   // Shared styles for price display
-  const priceTagStyles = {
+  const priceTagStyle = {
     position: 'absolute',
     backgroundColor: 'green',
     zIndex: '1000',
@@ -60,7 +73,7 @@ function Listings() {
         setAllListings(response.data);
         setDataIsLoading(false);
       } catch (error) {
-        // console.error("Error fetching listings:", error);
+        console.error("Error fetching listings:", error);
       }
     }
     getAllListings();
@@ -93,11 +106,7 @@ function Listings() {
           return (
             <Card
               key={listing.id}
-              sx={{
-                margin: '0.5rem',
-                border: '1px solid black',
-                position: 'relative',
-              }}
+              sx={ cardStyle }
             >
               <CardHeader
                 // action={
@@ -109,23 +118,18 @@ function Listings() {
               />
               <div style={{ position: 'relative' }}>
                 <CardMedia
-                  sx={{
-                    paddingRight: '1rem',
-                    paddingLeft: '1rem',
-                    height: '20rem',
-                    width: '30rem',
-                  }}
+                  sx={ pictureStyle }
                   component="img"
                   image={listing.picture1}
                   alt={listing.title}
                 />
                 {listing.property_status === "Sale" ? (
-                  <Typography sx={priceTagStyles}>
+                  <Typography sx={ priceTagStyle }>
                     {listing.listing_type}: $
                     {listing.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                   </Typography>
                 ) : (
-                  <Typography sx={priceTagStyles}>
+                  <Typography sx={ priceTagStyle }>
                     {listing.listing_type}: $
                     {listing.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     / {listing.rental_frequency}

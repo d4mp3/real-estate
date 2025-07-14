@@ -11,6 +11,8 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import Header from "./Components/Header";
 import Home from "./Components/Home";
 import Listings from "./Components/Listings";
+// import Login from "./Components/Login";
+import Register from "./Components/Register";
 import Testing from "./Components/Testing";
 
 function App() {
@@ -22,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           {/* <Route path="/login" element={<Login />} /> */}
+          <Route path="/register" element={<Register />} />
           <Route path="/listings" element={<Listings />} />
           <Route path="/testing" element={<Testing />} />
         </Routes>
