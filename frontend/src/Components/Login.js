@@ -1,9 +1,13 @@
 import Axios from "axios";
-import { useEffect, useReducer } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import { useNavigate } from "react-router";
 
 // MUI
 import { Button, Grid, TextField, Typography } from "@mui/material";
+
+// Contexts
+import DispatchContext from "../Contexts/DispatchContext";
+import StateContext from "../Contexts/StateContext";
 
 function Login() {
   const formContainer = {
@@ -25,7 +29,8 @@ function Login() {
       backgroundColor: "blue",
     },
   };
-
+  const GlobalDispatch = useContext(DispatchContext);
+  const GlobalState = useContext(StateContext);
   const navigate = useNavigate();
 
   const initialState = {
@@ -43,7 +48,7 @@ function Login() {
         return { ...state, passwordValue: action.payload };
       case "SET_SEND_REQUEST":
         return { ...state, sendRequest: action.payload };
-      case "SET_TOKEN":
+      case "CATCH_TOKEN":
         return { ...state, token: action.payload };
       default:
         return state;
@@ -55,7 +60,7 @@ function Login() {
   function FormSubmit(e) {
     e.preventDefault();
     console.log("Form submitted");
-    dispatch({ type: "SET_SEND_REQUEST", payload: true });
+    dispatch({ type:  "SET_SEND_REQUEST", payload: true });
   }
 
   useEffect(() => {
@@ -74,8 +79,8 @@ function Login() {
             }
           );
           console.log(response);
-          dispatch({ type: "SET_TOKEN", payload: response.data.auth_token });
-        //   navigate("/");
+          dispatch({ type: "CATCH_TOKEN", payload: response.data.auth_token });
+          GlobalDispatch({ type: "CATCH_TOKEN", payload: response.data.auth_token });
         } catch (error) {
           console.error("Error submitting form:", error);
         }
@@ -102,9 +107,15 @@ function Login() {
             },
             {
               cancelToken: source.token,
-            }
+             }
           );
           console.log(response);
+          GlobalDispatch({
+            type: "USER_SIGNS_IN",
+            usernameInfo: response.data.username,
+            emailInfo: response.data.email,
+            idInfo: response.data.id,
+          });
           navigate("/");
         } catch (error) {
           console.error("Error submitting form:", error);

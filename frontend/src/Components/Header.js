@@ -1,7 +1,11 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router";
 
 // MUI imports
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+
+// Contexts
+import StateContext from "../Contexts/StateContext";
 
 const addPropertyButtonStyle = {
   backgroundColor: "green",
@@ -33,7 +37,8 @@ const rightBoxStyle = {
 };
 
 function Header() {
-    const navigate = useNavigate();
+    const navigate  = useNavigate();
+    const GlobalState = useContext(StateContext);
   return (
     <AppBar position="static" sx={{ backgroundColor: "black" }}>
       <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -51,12 +56,20 @@ function Header() {
           </Button>
         </Box>
         <Box sx={rightBoxStyle}>
-          <Button sx={addPropertyButtonStyle} onClick={() => navigate("/add-property")}>
+          <Button sx={addPropertyButtonStyle}
+          // onClick={() => navigate("/add-property")}
+          >
             <Typography variant="button">Add Property</Typography>
           </Button>
-          <Button sx={loginButtonStyle} onClick={() => navigate("/login")}>
-            <Typography variant="button">Login</Typography>
-          </Button>
+          {GlobalState.userIsLogged ? (
+            <Button sx={loginButtonStyle} onClick={() => navigate("/login")}>
+              <Typography variant="button">{GlobalState.userUsername}</Typography>
+            </Button>
+          ) : (
+            <Button sx={loginButtonStyle} onClick={() => navigate("/login")}>
+              <Typography variant="button">Login</Typography>
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
