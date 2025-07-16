@@ -1,10 +1,11 @@
+import Axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 // MUI
 import { Button, Grid, TextField, Typography } from "@mui/material";
 
 function Register() {
-  const navigate = useNavigate();
   const formContainer = {
     width: "50%",
     marginLeft: "auto",
@@ -25,9 +26,50 @@ function Register() {
     },
   };
 
+  const navigate = useNavigate();
+  const [sendRequest, setSendRequest] = useState(false);
+  const [usernameValue, setUsernameValue] = useState("");
+  const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  const [rePasswordValue, setRePasswordValue] = useState("");
+
+  function FormSubmit(e) {
+    e.preventDefault();
+    console.log("Form submitted");
+    setSendRequest(!sendRequest);
+  }
+
+  useEffect(() => {
+    if (sendRequest) {
+      const source = Axios.CancelToken.source();
+      async function SignUp() {
+        try {
+          const response = await Axios.post(
+            "http://localhost:8000/api-auth-djoser/users/",
+            {
+              username: usernameValue,
+              email: emailValue,
+              password: passwordValue,
+              re_password: rePasswordValue,
+            },
+            {
+              cancelToken: source.token
+          });
+          console.log(response)
+        } catch (error) {
+          console.error("Error submitting form:", error);
+        }
+      }
+      SignUp();
+      return () => {
+        source.cancel();
+      }
+    }
+  }, [sendRequest]);
+
   return (
     <div style={formContainer}>
-      <form>
+      <form onSubmit={FormSubmit}>
         <Grid container justifyContent="center">
           <Typography variant="h4" gutterBottom>
             CREATE AN ACCOUNT
@@ -39,10 +81,19 @@ function Register() {
             label="Username"
             variant="outlined"
             fullWidth
+            value={usernameValue}
+            onChange={(e) => setUsernameValue(e.target.value)}
           />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
-          <TextField id="email" label="Email" variant="outlined" fullWidth />
+          <TextField
+            id="email"
+            label="Email"
+            variant="outlined"
+            fullWidth
+            value={emailValue}
+            onChange={(e) => setEmailValue(e.target.value)}
+          />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
           <TextField
@@ -51,15 +102,19 @@ function Register() {
             variant="outlined"
             type="password"
             fullWidth
-          />
+            value={passwordValue}
+            onChange={(e) => setPasswordValue(e.target.value)}
+            />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
           <TextField
-            id="confirm-password"
+            id="re-password"
             label="Confirm Password"
             variant="outlined"
             type="password"
             fullWidth
+            value={rePasswordValue}
+            onChange={(e) => setRePasswordValue(e.target.value)}
           />
         </Grid>
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
