@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 // MUI
 import { Button, Grid, TextField, Typography } from "@mui/material";
 
-function Register() {
+function Login() {
   const navigate = useNavigate();
   const formContainer = {
     width: "50%",
@@ -14,7 +14,7 @@ function Register() {
     padding: "3rem",
   };
 
-  const registerBtn = {
+  const loginBtn = {
     width: "66%",
     backgroundColor: "green",
     color: "white",
@@ -30,7 +30,7 @@ function Register() {
       <form>
         <Grid container justifyContent="center">
           <Typography variant="h4" gutterBottom>
-            CREATE AN ACCOUNT
+            SIGN IN
           </Typography>
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
@@ -42,9 +42,6 @@ function Register() {
           />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
-          <TextField id="email" label="Email" variant="outlined" fullWidth />
-        </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
           <TextField
             id="password"
             label="Password"
@@ -53,29 +50,20 @@ function Register() {
             fullWidth
           />
         </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <TextField
-            id="confirm-password"
-            label="Confirm Password"
-            variant="outlined"
-            type="password"
-            fullWidth
-          />
-        </Grid>
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
-          <Button variant="contained" type="submit" sx={registerBtn}>
-            SIGN UP
+          <Button variant="contained" type="submit" sx={loginBtn}>
+            SIGN IN
           </Button>
         </Grid>
       </form>
       <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
         <Typography variant="small" gutterBottom>
-          Already have an account?{" "}
-          <span onClick={() => navigate("/login")} style={{ cursor: "pointer", color: "green" }}>SIGN IN</span>
+          Don't have an account yet?{" "}
+          <span onClick={() => navigate("/register")} style={{ cursor: "pointer", color: "green" }}>SIGN UP</span>
         </Typography>
       </Grid>
     </div>
   );
 }
 
-export default Register;
+export default Login;
