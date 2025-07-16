@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { useNavigate } from "react-router";
 
 // MUI
@@ -27,35 +27,58 @@ function Register() {
   };
 
   const navigate = useNavigate();
-  const [sendRequest, setSendRequest] = useState(false);
-  const [usernameValue, setUsernameValue] = useState("");
-  const [emailValue, setEmailValue] = useState("");
-  const [passwordValue, setPasswordValue] = useState("");
-  const [rePasswordValue, setRePasswordValue] = useState("");
+
+  const initialState = {
+    usernameValue: "",
+    emailValue: "",
+    passwordValue: "",
+    rePasswordValue: "",
+    sendRequest: 0,
+  };
+
+  function ReducerFunction(state, action) {
+    switch (action.type) {
+      case "SET_USERNAME":
+        return { ...state, usernameValue: action.payload };
+      case "SET_EMAIL":
+        return { ...state, emailValue: action.payload };
+      case "SET_PASSWORD":
+        return { ...state, passwordValue: action.payload };
+      case "SET_RE_PASSWORD":
+        return { ...state, rePasswordValue: action.payload };
+      case "SET_SEND_REQUEST":
+        return { ...state, sendRequest: action.payload };
+      default:
+        return state;
+    }
+  }
+
+  const [state, dispatch] = useReducer(ReducerFunction, initialState);
 
   function FormSubmit(e) {
     e.preventDefault();
     console.log("Form submitted");
-    setSendRequest(!sendRequest);
+    dispatch({ type: "SET_SEND_REQUEST", payload: true });
   }
 
   useEffect(() => {
-    if (sendRequest) {
+    if (state.sendRequest) {
       const source = Axios.CancelToken.source();
       async function SignUp() {
         try {
           const response = await Axios.post(
             "http://localhost:8000/api-auth-djoser/users/",
             {
-              username: usernameValue,
-              email: emailValue,
-              password: passwordValue,
-              re_password: rePasswordValue,
+              username: state.usernameValue,
+              email: state.emailValue,
+              password: state.passwordValue,
+              re_password: state.rePasswordValue,
             },
             {
               cancelToken: source.token
           });
           console.log(response)
+          navigate("/")
         } catch (error) {
           console.error("Error submitting form:", error);
         }
@@ -65,7 +88,7 @@ function Register() {
         source.cancel();
       }
     }
-  }, [sendRequest]);
+  }, [state.sendRequest]);
 
   return (
     <div style={formContainer}>
@@ -81,8 +104,8 @@ function Register() {
             label="Username"
             variant="outlined"
             fullWidth
-            value={usernameValue}
-            onChange={(e) => setUsernameValue(e.target.value)}
+            value={state.usernameValue}
+            onChange={(e) => dispatch({ type: "SET_USERNAME", payload: e.target.value })}
           />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
@@ -91,8 +114,8 @@ function Register() {
             label="Email"
             variant="outlined"
             fullWidth
-            value={emailValue}
-            onChange={(e) => setEmailValue(e.target.value)}
+            value={state.emailValue}
+            onChange={(e) => dispatch({ type: "SET_EMAIL", payload: e.target.value })}
           />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
@@ -102,9 +125,9 @@ function Register() {
             variant="outlined"
             type="password"
             fullWidth
-            value={passwordValue}
-            onChange={(e) => setPasswordValue(e.target.value)}
-            />
+            value={state.passwordValue}
+            onChange={(e) => dispatch({ type: "SET_PASSWORD", payload: e.target.value })}
+          />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
           <TextField
@@ -113,8 +136,8 @@ function Register() {
             variant="outlined"
             type="password"
             fullWidth
-            value={rePasswordValue}
-            onChange={(e) => setRePasswordValue(e.target.value)}
+            value={state.rePasswordValue}
+            onChange={(e) => dispatch({ type: "SET_RE_PASSWORD", payload: e.target.value })}
           />
         </Grid>
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
