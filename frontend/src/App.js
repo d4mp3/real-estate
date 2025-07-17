@@ -42,6 +42,15 @@ function App() {
           userId: action.idInfo,
           userIsLogged: true,
         };
+      case "USER_LOGS_OUT":
+        return {
+          ...state,
+          userUsername: null,
+          userEmail: null,
+          userId: null,
+          userToken: null,
+          userIsLogged: false,
+        };
       default:
         return state;
     }
@@ -56,6 +65,13 @@ function App() {
       localStorage.setItem("userId", state.userId);
       localStorage.setItem("userToken", state.userToken);
       console.log("User is logged in:", state.userUsername);
+    }
+    else {
+      localStorage.removeItem("userUsername");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userToken");
+      console.log("User is logged out.");
     }
   }, [state.userIsLogged]);
 
