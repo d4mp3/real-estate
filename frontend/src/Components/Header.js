@@ -123,7 +123,7 @@ function Header() {
         <Box sx={rightBoxStyle}>
           <Button
             sx={addPropertyButtonStyle}
-            // onClick={() => navigate("/add-property")}
+            onClick={() => navigate("/add-property")}
           >
             <Typography variant="button">Add Property</Typography>
           </Button>

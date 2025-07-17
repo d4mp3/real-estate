@@ -5,27 +5,27 @@ import { useNavigate } from "react-router";
 // MUI
 import { Button, Grid, TextField, Typography } from "@mui/material";
 
+const formContainer = {
+  width: "50%",
+  marginLeft: "auto",
+  marginRight: "auto",
+  marginTop: "3rem",
+  border: "5px solid black",
+  padding: "3rem",
+};
+
+const registerBtn = {
+  width: "66%",
+  backgroundColor: "green",
+  color: "white",
+  fontSize: "1.1rem",
+  marginRight: "1rem",
+  "&:hover": {
+    backgroundColor: "blue",
+  },
+};
+
 function Register() {
-  const formContainer = {
-    width: "50%",
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: "3rem",
-    border: "5px solid black",
-    padding: "3rem",
-  };
-
-  const registerBtn = {
-    width: "66%",
-    backgroundColor: "green",
-    color: "white",
-    fontSize: "1.1rem",
-    marginRight: "1rem",
-    "&:hover": {
-      backgroundColor: "blue",
-    },
-  };
-
   const navigate = useNavigate();
 
   const initialState = {
@@ -75,10 +75,11 @@ function Register() {
               re_password: state.rePasswordValue,
             },
             {
-              cancelToken: source.token
-          });
-          console.log(response)
-          navigate("/")
+              cancelToken: source.token,
+            }
+          );
+          console.log(response);
+          navigate("/");
         } catch (error) {
           console.error("Error submitting form:", error);
         }
@@ -86,7 +87,7 @@ function Register() {
       SignUp();
       return () => {
         source.cancel();
-      }
+      };
     }
   }, [state.sendRequest]);
 
@@ -105,7 +106,9 @@ function Register() {
             variant="outlined"
             fullWidth
             value={state.usernameValue}
-            onChange={(e) => dispatch({ type: "SET_USERNAME", payload: e.target.value })}
+            onChange={(e) =>
+              dispatch({ type: "SET_USERNAME", payload: e.target.value })
+            }
           />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
@@ -115,7 +118,9 @@ function Register() {
             variant="outlined"
             fullWidth
             value={state.emailValue}
-            onChange={(e) => dispatch({ type: "SET_EMAIL", payload: e.target.value })}
+            onChange={(e) =>
+              dispatch({ type: "SET_EMAIL", payload: e.target.value })
+            }
           />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
@@ -126,7 +131,9 @@ function Register() {
             type="password"
             fullWidth
             value={state.passwordValue}
-            onChange={(e) => dispatch({ type: "SET_PASSWORD", payload: e.target.value })}
+            onChange={(e) =>
+              dispatch({ type: "SET_PASSWORD", payload: e.target.value })
+            }
           />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
@@ -137,7 +144,9 @@ function Register() {
             type="password"
             fullWidth
             value={state.rePasswordValue}
-            onChange={(e) => dispatch({ type: "SET_RE_PASSWORD", payload: e.target.value })}
+            onChange={(e) =>
+              dispatch({ type: "SET_RE_PASSWORD", payload: e.target.value })
+            }
           />
         </Grid>
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
@@ -149,7 +158,12 @@ function Register() {
       <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
         <Typography variant="small" gutterBottom>
           Already have an account?{" "}
-          <span onClick={() => navigate("/login")} style={{ cursor: "pointer", color: "green" }}>SIGN IN</span>
+          <span
+            onClick={() => navigate("/login")}
+            style={{ cursor: "pointer", color: "green" }}
+          >
+            SIGN IN
+          </span>
         </Typography>
       </Grid>
     </div>

@@ -9,26 +9,27 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 import DispatchContext from "../Contexts/DispatchContext";
 import StateContext from "../Contexts/StateContext";
 
-function Login() {
-  const formContainer = {
-    width: "50%",
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: "3rem",
-    border: "5px solid black",
-    padding: "3rem",
-  };
+const formContainer = {
+  width: "50%",
+  marginLeft: "auto",
+  marginRight: "auto",
+  marginTop: "3rem",
+  border: "5px solid black",
+  padding: "3rem",
+};
 
-  const loginBtn = {
-    width: "66%",
-    backgroundColor: "green",
-    color: "white",
-    fontSize: "1.1rem",
-    marginRight: "1rem",
-    "&:hover": {
-      backgroundColor: "blue",
-    },
-  };
+const loginBtn = {
+  width: "66%",
+  backgroundColor: "green",
+  color: "white",
+  fontSize: "1.1rem",
+  marginRight: "1rem",
+  "&:hover": {
+    backgroundColor: "blue",
+  },
+};
+
+function Login() {
   const GlobalDispatch = useContext(DispatchContext);
   const GlobalState = useContext(StateContext);
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ function Login() {
   function FormSubmit(e) {
     e.preventDefault();
     console.log("Form submitted");
-    dispatch({ type:  "SET_SEND_REQUEST", payload: true });
+    dispatch({ type: "SET_SEND_REQUEST", payload: true });
   }
 
   useEffect(() => {
@@ -80,7 +81,10 @@ function Login() {
           );
           console.log(response);
           dispatch({ type: "CATCH_TOKEN", payload: response.data.auth_token });
-          GlobalDispatch({ type: "CATCH_TOKEN", payload: response.data.auth_token });
+          GlobalDispatch({
+            type: "CATCH_TOKEN",
+            payload: response.data.auth_token,
+          });
         } catch (error) {
           console.error("Error submitting form:", error);
         }
@@ -92,8 +96,8 @@ function Login() {
     }
   }, [state.sendRequest]);
 
-    // Get user info
-    useEffect(() => {
+  // Get user info
+  useEffect(() => {
     if (state.token) {
       const source = Axios.CancelToken.source();
       async function GetUserInfo() {
@@ -107,7 +111,7 @@ function Login() {
             },
             {
               cancelToken: source.token,
-             }
+            }
           );
           console.log(response);
           GlobalDispatch({
@@ -143,7 +147,9 @@ function Login() {
             variant="outlined"
             fullWidth
             value={state.usernameValue}
-            onChange={(e) => dispatch({ type: "SET_USERNAME", payload: e.target.value })}
+            onChange={(e) =>
+              dispatch({ type: "SET_USERNAME", payload: e.target.value })
+            }
           />
         </Grid>
         <Grid container sx={{ marginTop: "1rem" }}>
@@ -154,7 +160,9 @@ function Login() {
             type="password"
             fullWidth
             value={state.passwordValue}
-            onChange={(e) => dispatch({ type: "SET_PASSWORD", payload: e.target.value })}
+            onChange={(e) =>
+              dispatch({ type: "SET_PASSWORD", payload: e.target.value })
+            }
           />
         </Grid>
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
