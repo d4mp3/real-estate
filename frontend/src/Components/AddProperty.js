@@ -3,6 +3,9 @@ import Axios from "axios";
 import { useEffect, useState, useReducer } from "react";
 import { useNavigate } from "react-router";
 
+// React Leaflet
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
+
 // MUI
 import {
   Button,
@@ -11,10 +14,11 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  MenuItem,
 } from "@mui/material";
 
 const formContainer = {
-  width: "50%",
+  width: "66%",
   marginLeft: "auto",
   marginRight: "auto",
   marginTop: "3rem",
@@ -32,6 +36,167 @@ const registerBtn = {
     backgroundColor: "blue",
   },
 };
+
+const areaOptions = [
+  // {
+  //   value: "",
+  //   label: "",
+  // },
+  {
+    value: "Inner London",
+    label: "Inner London",
+  },
+  {
+    value: "Outer London",
+    label: "Outer London",
+  },
+];
+
+const innerLondonOptions = [
+  {
+    value: "",
+    label: "",
+  },
+  {
+    value: "Camden",
+    label: "Camden",
+  },
+  {
+    value: "Greenwich",
+    label: "Greenwich",
+  },
+  {
+    value: "Hackney",
+    label: "Hackney",
+  },
+  {
+    value: "Hammersmith and Fulham",
+    label: "Hammersmith and Fulham",
+  },
+  {
+    value: "Islington",
+    label: "Islington",
+  },
+  {
+    value: "Kensington and Chelsea",
+    label: "Kensington and Chelsea",
+  },
+  {
+    value: "Lambeth",
+    label: "Lambeth",
+  },
+  {
+    value: "Lewisham",
+    label: "Lewisham",
+  },
+  {
+    value: "Southwark",
+    label: "Southwark",
+  },
+  {
+    value: "Tower Hamlets",
+    label: "Tower Hamlets",
+  },
+  {
+    value: "Wandsworth",
+    label: "Wandsworth",
+  },
+  {
+    value: "Westminster",
+    label: "Westminster",
+  },
+  {
+    value: "City of London",
+    label: "City of London",
+  },
+];
+
+const outerLondonOptions = [
+  {
+    value: "",
+    label: "",
+  },
+  {
+    value: "Barking and Dangenham",
+    label: "Barking and Dangenham",
+  },
+  {
+    value: "Barnet",
+    label: "Barnet",
+  },
+  {
+    value: "Bexley",
+    label: "Bexley",
+  },
+  {
+    value: "Brent",
+    label: "Brent",
+  },
+  {
+    value: "Bromley",
+    label: "Bromley",
+  },
+  {
+    value: "Croydon",
+    label: "Croydon",
+  },
+  {
+    value: "Ealing",
+    label: "Ealing",
+  },
+  {
+    value: "Enfield",
+    label: "Enfield",
+  },
+  {
+    value: "Haringey",
+    label: "Haringey",
+  },
+  {
+    value: "Harrow",
+    label: "Harrow",
+  },
+  {
+    value: "Havering",
+    label: "Havering",
+  },
+  {
+    value: "Hillingdon",
+    label: "Hillingdon",
+  },
+  {
+    value: "Hounslow",
+    label: "Hounslow",
+  },
+  {
+    value: "Kingston upon Thames",
+    label: "Kingston upon Thames",
+  },
+  {
+    value: "Merton",
+    label: "Merton",
+  },
+  {
+    value: "Newham",
+    label: "Newham",
+  },
+  {
+    value: "Redbridge",
+    label: "Redbridge",
+  },
+  {
+    value: "Richmond upon Thames",
+    label: "Richmond upon Thames",
+  },
+  {
+    value: "Sutton",
+    label: "Sutton",
+  },
+  {
+    value: "Waltham Forest",
+    label: "Waltham Forest",
+  },
+];
 
 function AddProperty() {
   const navigate = useNavigate();
@@ -164,30 +329,7 @@ function AddProperty() {
             }
           />
         </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <TextField
-            id="area"
-            label="Area"
-            variant="standard"
-            fullWidth
-            value={state.areaValue}
-            onChange={(e) =>
-              dispatch({ type: "SET_AREA", payload: e.target.value })
-            }
-          />
-        </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <TextField
-            id="borough"
-            label="Borough"
-            variant="standard"
-            fullWidth
-            value={state.boroughValue}
-            onChange={(e) =>
-              dispatch({ type: "SET_BOROUGH", payload: e.target.value })
-            }
-          />
-        </Grid>
+
         <Grid container sx={{ marginTop: "1rem" }}>
           <TextField
             id="propertyStatus"
@@ -212,7 +354,12 @@ function AddProperty() {
             }
           />
         </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
+        <Grid container  sx={{
+            marginTop: "1rem",
+            minWidth: "320px",
+            flexGrow: 1,
+            maxWidth: "48%",
+          }}>
           <TextField
             id="rentalFrequency"
             label="Rental Frequency"
@@ -303,6 +450,90 @@ function AddProperty() {
             }
             label="Parking"
           />
+        </Grid>
+       <Grid item container justifyContent={"space-between"} spacing={2}>
+          <Grid item xs={5.8} sx={{ marginTop: "1rem" }}>
+            <TextField
+              id="area"
+              label="Area"
+              variant="standard"
+              fullWidth
+              value={state.areaValue}
+              onChange={(e) =>
+                dispatch({ type: "SET_AREA", payload: e.target.value })
+              }
+              select
+              sx={{
+                minWidth: "380px",
+                "& .MuiInputBase-root": {
+                  minHeight: "48px",
+                },
+                "& .MuiInputLabel-root": {
+                  fontSize: "1rem",
+                },
+              }}
+            >
+              {areaOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={5.8} sx={{ marginTop: "1rem" }}>
+            <TextField
+              id="borough"
+              label="Borough"
+              variant="standard"
+              fullWidth
+              value={state.boroughValue}
+              onChange={(e) =>
+                dispatch({ type: "SET_BOROUGH", payload: e.target.value })
+              }
+              select
+              sx={{
+                minWidth: "380px",
+                "& .MuiInputBase-root": {
+                  minHeight: "48px",
+                },
+                "& .MuiInputLabel-root": {
+                  fontSize: "1rem",
+                },
+              }}
+            >
+              {state.areaValue === "Inner London"
+                ? innerLondonOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))
+                : ""}
+              {state.areaValue === "Outer London"
+                ? outerLondonOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))
+                : ""}
+            </TextField>
+          </Grid>
+        </Grid>
+        <Grid item container className="map-container">
+          <MapContainer
+            center={[51.505, -0.09]}
+            zoom={14}
+            scrollWheelZoom={true}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {/* <Marker position={[51.505, -0.09]}>
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker> */}
+          </MapContainer>
         </Grid>
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
           <Button variant="contained" type="submit" sx={registerBtn}>
