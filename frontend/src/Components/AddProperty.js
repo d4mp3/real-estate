@@ -1,6 +1,4 @@
-import React from "react";
-import Axios from "axios";
-import { useEffect, useState, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import { useNavigate } from "react-router";
 
 // React Leaflet
@@ -9,12 +7,12 @@ import { MapContainer, TileLayer, useMap } from "react-leaflet";
 // MUI
 import {
   Button,
+  Checkbox,
+  FormControlLabel,
   Grid,
+  MenuItem,
   TextField,
   Typography,
-  FormControlLabel,
-  Checkbox,
-  MenuItem,
 } from "@mui/material";
 
 const formContainer = {
@@ -200,6 +198,7 @@ const outerLondonOptions = [
 
 function AddProperty() {
   const navigate = useNavigate();
+  const mapInitializedRef = useRef(false);
 
   const initialState = {
     titleValue: "",
@@ -224,6 +223,7 @@ function AddProperty() {
     picture4Value: "",
     picture5Value: "",
     sendRequest: false,
+    mapInstance: null,
   };
 
   function ReducerFunction(state, action) {
@@ -272,12 +272,276 @@ function AddProperty() {
         return { ...state, picture5Value: action.payload };
       case "SET_SEND_REQUEST":
         return { ...state, sendRequest: action.payload };
+      case "GET_MAP":
+        return { ...state, mapInstance: action.payload };
       default:
         return state;
     }
   }
 
   const [state, dispatch] = useReducer(ReducerFunction, initialState);
+
+  // Clear borough value when area changes (but not on initial load)
+  useEffect(() => {
+    if (state.areaValue && state.boroughValue) {
+      // Check if current borough value is valid for the selected area
+      const currentAreaOptions = state.areaValue === "Inner London" ? innerLondonOptions : outerLondonOptions;
+      const isValidBorough = currentAreaOptions.some(option => option.value === state.boroughValue);
+
+      if (!isValidBorough) {
+        dispatch({ type: "SET_BOROUGH", payload: "" });
+      }
+    }
+  }, [state.areaValue, state.boroughValue]);
+
+  function TheMapComponent() {
+    const map = useMap();
+
+    useEffect(() => {
+      if (map && !mapInitializedRef.current) {
+        dispatch({ type: "GET_MAP", payload: map });
+        mapInitializedRef.current = true;
+      }
+    }, [map]);
+
+    return null;
+  }
+
+  //  Use effect to change the map view depending on chosen borough
+useEffect(() => {
+		if (state.mapInstance && state.boroughValue === "Camden") {
+			state.mapInstance.setView([51.54103467179952, -0.14870897037846917], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.54103467179952,
+			// 	changeLongitude: -0.14870897037846917,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Greenwich") {
+			state.mapInstance.setView([51.486316313935134, 0.005925763550159742], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.486316313935134,
+			// 	changeLongitude: 0.005925763550159742,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Hackney") {
+			state.mapInstance.setView([51.55421119118178, -0.061054618357071246], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.55421119118178,
+			// 	changeLongitude: -0.061054618357071246,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Hammersmith and Fulham") {
+			state.mapInstance.setView([51.496961673854216, -0.22495912738555046], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.496961673854216,
+			// 	changeLongitude: -0.22495912738555046,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Islington") {
+			state.mapInstance.setView([51.54974373783584, -0.10746608414711818], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.54974373783584,
+			// 	changeLongitude: -0.10746608414711818,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Kensington and Chelsea") {
+			state.mapInstance.setView([51.49779579272461, -0.1908227388030137], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.49779579272461,
+			// 	changeLongitude: -0.1908227388030137,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Lambeth") {
+			state.mapInstance.setView([51.457598293463874, -0.12030697867735651], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.457598293463874,
+			// 	changeLongitude: -0.12030697867735651,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Lewisham") {
+			state.mapInstance.setView([51.45263474786279, -0.017657579903930083], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.45263474786279,
+			// 	changeLongitude: -0.017657579903930083,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Southwark") {
+			state.mapInstance.setView([51.47281414549159, -0.07657080658293915], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.47281414549159,
+			// 	changeLongitude: -0.07657080658293915,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Tower Hamlets") {
+			state.mapInstance.setView([51.52222760075287, -0.03427379217816716], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.52222760075287,
+			// 	changeLongitude: -0.03427379217816716,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Wandsworth") {
+			state.mapInstance.setView([51.45221859319854, -0.1910578642162312], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.45221859319854,
+			// 	changeLongitude: -0.1910578642162312,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Westminster") {
+			state.mapInstance.setView([51.51424692365236, -0.1557886924596714], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.51424692365236,
+			// 	changeLongitude: -0.1557886924596714,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "City of London") {
+			state.mapInstance.setView([51.51464652712437, -0.09207257068971077], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.51464652712437,
+			// 	changeLongitude: -0.09207257068971077,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Barking and Dangenham") {
+			state.mapInstance.setView([51.54475354441844, 0.13730036835406337], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.54475354441844,
+			// 	changeLongitude: 0.13730036835406337,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Barnet") {
+			state.mapInstance.setView([51.61505810569654, -0.20104146847921367], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.61505810569654,
+			// 	changeLongitude: -0.20104146847921367,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Bexley") {
+			state.mapInstance.setView([51.45784336604241, 0.1386755093498764], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.45784336604241,
+			// 	changeLongitude: 0.1386755093498764,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Brent") {
+			state.mapInstance.setView([51.55847917911348, -0.2623697479848262], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.55847917911348,
+			// 	changeLongitude: -0.2623697479848262,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Bromley") {
+			state.mapInstance.setView([51.37998089785619, 0.056091833685512606], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.37998089785619,
+			// 	changeLongitude: 0.056091833685512606,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Croydon") {
+			state.mapInstance.setView([51.36613815034951, -0.08597242883896719], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.36613815034951,
+			// 	changeLongitude: -0.08597242883896719,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Ealing") {
+			state.mapInstance.setView([51.52350664933499, -0.33384540332179463], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.52350664933499,
+			// 	changeLongitude: -0.33384540332179463,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Enfield") {
+			state.mapInstance.setView([51.650718869158275, -0.07999628038008409], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.650718869158275,
+			// 	changeLongitude: -0.07999628038008409,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Haringey") {
+			state.mapInstance.setView([51.591214467057085, -0.10319530898095737], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.591214467057085,
+			// 	changeLongitude: -0.10319530898095737,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Harrow") {
+			state.mapInstance.setView([51.60218606442213, -0.33540294600548437], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.60218606442213,
+			// 	changeLongitude: -0.33540294600548437,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Havering") {
+			state.mapInstance.setView([51.57230623503768, 0.2256095005492423], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.57230623503768,
+			// 	changeLongitude: 0.2256095005492423,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Hillingdon") {
+			state.mapInstance.setView([51.5430033964411, -0.4435905982156584], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.5430033964411,
+			// 	changeLongitude: -0.4435905982156584,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Hounslow") {
+			state.mapInstance.setView([51.475988836438525, -0.3660060903075389], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.475988836438525,
+			// 	changeLongitude: -0.3660060903075389,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Kingston upon Thames") {
+			state.mapInstance.setView([51.39401320084246, -0.2841003136670212], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.39401320084246,
+			// 	changeLongitude: -0.2841003136670212,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Merton") {
+			state.mapInstance.setView([51.41148120353897, -0.18805584151013174], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.41148120353897,
+			// 	changeLongitude: -0.18805584151013174,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Newham") {
+			state.mapInstance.setView([51.533282275935306, 0.031692014878610064], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.533282275935306,
+			// 	changeLongitude: 0.031692014878610064,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Redbridge") {
+			state.mapInstance.setView([51.585885574074965, 0.07764760021283491], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.585885574074965,
+			// 	changeLongitude: 0.07764760021283491,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Richmond upon Thames") {
+			state.mapInstance.setView([51.450368976651696, -0.30801386088548505], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.450368976651696,
+			// 	changeLongitude: -0.30801386088548505,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Sutton") {
+			state.mapInstance.setView([51.363672040828504, -0.1702200806863363], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.363672040828504,
+			// 	changeLongitude: -0.1702200806863363,
+			// });
+		} else if (state.mapInstance && state.boroughValue === "Waltham Forest") {
+			state.mapInstance.setView([51.59466635701797, -0.012215840493378892], 12);
+			// dispatch({
+			// 	type: "changeMarkerPosition",
+			// 	changeLatitude: 51.59466635701797,
+			// 	changeLongitude: -0.012215840493378892,
+			// });
+		}
+	}, [state.boroughValue, state.mapInstance]);
 
   function FormSubmit(e) {
     e.preventDefault();
@@ -451,8 +715,8 @@ function AddProperty() {
             label="Parking"
           />
         </Grid>
-       <Grid item container justifyContent={"space-between"} spacing={2}>
-          <Grid item xs={5.8} sx={{ marginTop: "1rem" }}>
+       <Grid container justifyContent={"space-between"} spacing={2}>
+          <Grid size={5.8} sx={{ marginTop: "1rem" }}>
             <TextField
               id="area"
               label="Area"
@@ -480,7 +744,7 @@ function AddProperty() {
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={5.8} sx={{ marginTop: "1rem" }}>
+          <Grid size={5.8} sx={{ marginTop: "1rem" }}>
             <TextField
               id="borough"
               label="Borough"
@@ -507,18 +771,18 @@ function AddProperty() {
                       {option.label}
                     </MenuItem>
                   ))
-                : ""}
+                : null}
               {state.areaValue === "Outer London"
                 ? outerLondonOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))
-                : ""}
+                : null}
             </TextField>
           </Grid>
         </Grid>
-        <Grid item container className="map-container">
+        <Grid container className="map-container">
           <MapContainer
             center={[51.505, -0.09]}
             zoom={14}
@@ -528,11 +792,7 @@ function AddProperty() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {/* <Marker position={[51.505, -0.09]}>
-              <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-              </Popup>
-            </Marker> */}
+            <TheMapComponent />
           </MapContainer>
         </Grid>
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
@@ -541,6 +801,12 @@ function AddProperty() {
           </Button>
         </Grid>
       </form>
+      <Button 
+        onClick={() => state.mapInstance && state.mapInstance.setView([51.53, -0.09], 15)}
+        disabled={!state.mapInstance}
+      >
+        TEST
+      </Button>
     </div>
   );
 }

@@ -112,7 +112,7 @@ function Listings() {
 
   return (
     <Grid container>
-      <Grid item size={{ xs: 3 }}>
+      <Grid size={{ xs: 3 }}>
         {allListings.map((listing) => {
           return (
             <Card key={listing.id} sx={cardStyle}>
@@ -165,7 +165,7 @@ function Listings() {
           );
         })}
       </Grid>
-      <Grid item size={{ xs: 9 }} style={{ marginTop: "0.5rem" }}>
+      <Grid size={{ xs: 9 }} style={{ marginTop: "0.5rem" }}>
         <AppBar position="sticky">
           <div className="leaflet-container">
             <MapContainer
