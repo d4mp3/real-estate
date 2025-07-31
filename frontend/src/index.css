@@ -20,7 +20,7 @@ code {
 }
 
 .map-container{
-    height: auto;
+    height: 35rem;
     width: auto;
     overflow-y: hidden;
     margin-top: 1rem;
