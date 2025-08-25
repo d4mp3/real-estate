@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useReducer, useRef } from "react";
+import Axios from "axios";
+import { useContext, useEffect, useMemo, useReducer, useRef } from "react";
 import { useNavigate } from "react-router";
 
 // React Leaflet
@@ -9,6 +10,7 @@ import {
   TileLayer,
   useMap,
 } from "react-leaflet";
+
 
 // Boroughs
 import Barking from "./Assets/Boroughs/Barking";
@@ -246,9 +248,63 @@ const outerLondonOptions = [
   },
 ];
 
+const listingTypeOptions = [
+  {
+    value: "",
+    label: "",
+  },
+  {
+    value: "Apartment",
+    label: "Apartment",
+  },
+  {
+    value: "House",
+    label: "House",
+  },
+  {
+    value: "Office",
+    label: "Office",
+  },
+];
+
+const propertyStatusOptions = [
+  {
+    value: "",
+    label: "",
+  },
+  {
+    value: "Sale",
+    label: "Sale",
+  },
+  {
+    value: "Rent",
+    label: "Rent",
+  },
+];
+
+const rentalFrequencyOptions = [
+  {
+    value: "",
+    label: "",
+  },
+  {
+    value: "Month",
+    label: "Month",
+  },
+  {
+    value: "Week",
+    label: "Week",
+  },
+  {
+    value: "Day",
+    label: "Day",
+  },
+];
+
 function AddProperty() {
   const navigate = useNavigate();
   const mapInitializedRef = useRef(false);
+  const GlobalState = useContext
 
   const initialState = {
     titleValue: "",
@@ -272,7 +328,7 @@ function AddProperty() {
     picture3Value: "",
     picture4Value: "",
     picture5Value: "",
-    sendRequest: false,
+    sendRequest: 0,
     mapInstance: null,
     markerPosition: {
       lat: "51.505",
@@ -731,6 +787,65 @@ function AddProperty() {
     dispatch({ type: "SET_SEND_REQUEST", payload: true });
   }
 
+  useEffect(() => {
+    if (state.sendRequest) {
+      async function AddProperty() {
+        const formData = new FormData();
+        formData.append("title", state.titleValue);
+        formData.append("description", state.descriptionValue);
+        formData.append("area", state.areaValue);
+        formData.append("borough", state.boroughValue);
+        formData.append("listing_type", state.listingTypeValue);
+        formData.append("property_status", state.propertyStatusValue);
+        formData.append("price", state.priceValue);
+        formData.append("rental_frequency", state.rentalFrequencyValue);
+        formData.append("rooms", state.roomsValue);
+        formData.append("furnished", state.furnishedValue);
+        formData.append("pool", state.poolValue);
+        formData.append("elevator", state.elevatorValue);
+        formData.append("cctv", state.cctvValue);
+        formData.append("parking", state.parkingValue);
+        formData.append("latitude", state.latitudeValue);
+        formData.append("longitude", state.longitudeValue);
+        formData.append("picture1", state.picture1Value);
+        formData.append("picture2", state.picture2Value);
+        formData.append("picture3", state.picture3Value);
+        formData.append("picture4", state.picture4Value);
+        formData.append("picture5", state.picture5Value);
+        formData.append("seller", state.GlobalState.userId);
+
+        try {
+          const response = await Axios.post("http://localhost:8000/api/listings/create/", formData)
+          console.log(response);
+        } catch(e) {
+          console.log(e.response);
+        }
+      }
+      AddProperty()
+    }
+  }, [state.sendRequest])
+
+  function PriceDisplay() {
+    if (
+      state.propertyStatusValue === "Rent" &&
+      state.rentalFrequencyValue === "Day"
+    ) {
+      return "Price per Day*";
+    } else if (
+      state.propertyStatusValue === "Rent" &&
+      state.rentalFrequencyValue === "Week"
+    ) {
+      return "Price per Week*";
+    } else if (
+      state.propertyStatusValue === "Rent" &&
+      state.rentalFrequencyValue === "Month"
+    ) {
+      return "Price per Month*";
+    } else {
+      return "Price*";
+    }
+  }
+
   return (
     <div style={formContainer}>
       <form onSubmit={FormSubmit}>
@@ -739,10 +854,11 @@ function AddProperty() {
             SUBMIT A PROPERTY
           </Typography>
         </Grid>
+
         <Grid container sx={{ marginTop: "1rem" }}>
           <TextField
             id="title"
-            label="Title"
+            label="Title*"
             variant="standard"
             fullWidth
             value={state.titleValue}
@@ -751,23 +867,104 @@ function AddProperty() {
             }
           />
         </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <TextField
-            id="listingType"
-            label="Listing Type"
-            variant="standard"
-            fullWidth
-            value={state.listingTypeValue}
-            onChange={(e) =>
-              dispatch({ type: "SET_LISTING_TYPE", payload: e.target.value })
-            }
-          />
+
+        <Grid container justifyContent="space-between">
+          <Grid item size={{ xs: 5 }} sx={{ marginTop: "1rem" }}>
+            <TextField
+              id="listingType"
+              label="Listing Type*"
+              variant="standard"
+              fullWidth
+              value={state.listingTypeValue}
+              onChange={(e) =>
+                dispatch({ type: "SET_LISTING_TYPE", payload: e.target.value })
+              }
+              select
+            >
+              {listingTypeOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item size={{ xs: 5 }} sx={{ marginTop: "1rem" }}>
+            <TextField
+              id="propertyStatus"
+              label="Property Status*"
+              variant="standard"
+              fullWidth
+              value={state.propertyStatusValue}
+              onChange={(e) =>
+                dispatch({
+                  type: "SET_PROPERTY_STATUS",
+                  payload: e.target.value,
+                })
+              }
+              select
+            >
+              {propertyStatusOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
         </Grid>
+
+        <Grid container justifyContent="space-between">
+          <Grid
+            item
+            size={{ xs: 5 }}
+            sx={{
+              marginTop: "1rem",
+            }}
+          >
+            <TextField
+              id="rentalFrequency"
+              label="Rental Frequency"
+              variant="standard"
+              disabled={state.propertyStatusValue === "Sale" ? true : false}
+              fullWidth
+              value={state.rentalFrequencyValue}
+              onChange={(e) =>
+                dispatch({
+                  type: "SET_RENTAL_FREQUENCY",
+                  payload: e.target.value,
+                })
+              }
+              select
+            >
+              {rentalFrequencyOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item size={{ xs: 5 }} sx={{ marginTop: "1rem" }}>
+            <TextField
+              id="price"
+              type="number"
+              label={PriceDisplay()}
+              variant="standard"
+              fullWidth
+              value={state.priceValue}
+              onChange={(e) =>
+                dispatch({ type: "SET_PRICE", payload: e.target.value })
+              }
+            />
+          </Grid>
+        </Grid>
+
         <Grid container sx={{ marginTop: "1rem" }}>
           <TextField
             id="description"
             label="Description"
-            variant="standard"
+            variant="outlined"
+            multiline
+            rows={6}
             fullWidth
             value={state.descriptionValue}
             onChange={(e) =>
@@ -776,135 +973,109 @@ function AddProperty() {
           />
         </Grid>
 
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <TextField
-            id="propertyStatus"
-            label="Property Status"
-            variant="standard"
-            fullWidth
-            value={state.propertyStatusValue}
-            onChange={(e) =>
-              dispatch({ type: "SET_PROPERTY_STATUS", payload: e.target.value })
-            }
-          />
-        </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <TextField
-            id="price"
-            label="Price"
-            variant="standard"
-            fullWidth
-            value={state.priceValue}
-            onChange={(e) =>
-              dispatch({ type: "SET_PRICE", payload: e.target.value })
-            }
-          />
-        </Grid>
-        <Grid
-          container
-          sx={{
-            marginTop: "1rem",
-            minWidth: "320px",
-            flexGrow: 1,
-            maxWidth: "48%",
-          }}
-        >
-          <TextField
-            id="rentalFrequency"
-            label="Rental Frequency"
-            variant="standard"
-            fullWidth
-            value={state.rentalFrequencyValue}
-            onChange={(e) =>
-              dispatch({
-                type: "SET_RENTAL_FREQUENCY",
-                payload: e.target.value,
-              })
-            }
-          />
-        </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <TextField
-            id="rooms"
-            label="Rooms"
-            variant="standard"
-            fullWidth
-            value={state.roomsValue}
-            onChange={(e) =>
-              dispatch({ type: "SET_ROOMS", payload: e.target.value })
-            }
-          />
-        </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state.furnishedValue}
+        {state.listingTypeValue === "Office" ? (
+          ""
+        ) : (
+          <Grid container>
+            <Grid item size={{ xs: 3 }} sx={{ marginTop: "1rem" }}>
+              <TextField
+                id="rooms"
+                label="Rooms"
+                type="number"
+                variant="standard"
+                fullWidth
+                value={state.roomsValue}
                 onChange={(e) =>
-                  dispatch({ type: "SET_FURNISHED", payload: e.target.checked })
+                  dispatch({ type: "SET_ROOMS", payload: e.target.value })
                 }
               />
-            }
-            label="Furnished"
-          />
+            </Grid>
+          </Grid>
+        )}
+
+        <Grid container justifyContent="space-between">
+          <Grid item size={{ xs: 2 }} sx={{ marginTop: "1rem" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={state.furnishedValue}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "SET_FURNISHED",
+                      payload: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="Furnished"
+            />
+          </Grid>
+
+          <Grid item size={{ xs: 2 }} sx={{ marginTop: "1rem" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={state.poolValue}
+                  onChange={(e) =>
+                    dispatch({ type: "SET_POOL", payload: e.target.checked })
+                  }
+                />
+              }
+              label="Pool"
+            />
+          </Grid>
+
+          <Grid item size={{ xs: 2 }} sx={{ marginTop: "1rem" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={state.elevatorValue}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "SET_ELEVATOR",
+                      payload: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="Elevator"
+            />
+          </Grid>
+
+          <Grid item size={{ xs: 2 }} sx={{ marginTop: "1rem" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={state.cctvValue}
+                  onChange={(e) =>
+                    dispatch({ type: "SET_CCTV", payload: e.target.checked })
+                  }
+                />
+              }
+              label="CCTV"
+            />
+          </Grid>
+
+          <Grid item size={{ xs: 2 }} sx={{ marginTop: "1rem" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={state.parkingValue}
+                  onChange={(e) =>
+                    dispatch({ type: "SET_PARKING", payload: e.target.checked })
+                  }
+                />
+              }
+              label="Parking"
+            />
+          </Grid>
         </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state.poolValue}
-                onChange={(e) =>
-                  dispatch({ type: "SET_POOL", payload: e.target.checked })
-                }
-              />
-            }
-            label="Pool"
-          />
-        </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state.elevatorValue}
-                onChange={(e) =>
-                  dispatch({ type: "SET_ELEVATOR", payload: e.target.checked })
-                }
-              />
-            }
-            label="Elevator"
-          />
-        </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state.cctvValue}
-                onChange={(e) =>
-                  dispatch({ type: "SET_CCTV", payload: e.target.checked })
-                }
-              />
-            }
-            label="CCTV"
-          />
-        </Grid>
-        <Grid container sx={{ marginTop: "1rem" }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state.parkingValue}
-                onChange={(e) =>
-                  dispatch({ type: "SET_PARKING", payload: e.target.checked })
-                }
-              />
-            }
-            label="Parking"
-          />
-        </Grid>
+
         <Grid container justifyContent={"space-between"} spacing={2}>
-          <Grid size={5.8} sx={{ marginTop: "1rem" }}>
+          <Grid item size={{ xs: 5 }} sx={{ marginTop: "1rem" }}>
             <TextField
               id="area"
-              label="Area"
+              label="Area*"
               variant="standard"
               fullWidth
               value={state.areaValue}
@@ -912,15 +1083,6 @@ function AddProperty() {
                 dispatch({ type: "SET_AREA", payload: e.target.value })
               }
               select
-              sx={{
-                minWidth: "380px",
-                "& .MuiInputBase-root": {
-                  minHeight: "48px",
-                },
-                "& .MuiInputLabel-root": {
-                  fontSize: "1rem",
-                },
-              }}
             >
               {areaOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -929,10 +1091,11 @@ function AddProperty() {
               ))}
             </TextField>
           </Grid>
-          <Grid size={5.8} sx={{ marginTop: "1rem" }}>
+
+          <Grid item size={{ xs: 5 }} sx={{ marginTop: "1rem" }}>
             <TextField
               id="borough"
-              label="Borough"
+              label="Borough*"
               variant="standard"
               fullWidth
               value={state.boroughValue}
@@ -967,6 +1130,7 @@ function AddProperty() {
             </TextField>
           </Grid>
         </Grid>
+
         <Grid container className="map-container">
           <MapContainer
             center={[51.505, -0.09]}
@@ -988,6 +1152,7 @@ function AddProperty() {
             ></Marker>
           </MapContainer>
         </Grid>
+
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
           <Button variant="contained" component="label" sx={picturesBtn}>
             UPLOAD PICTURES (MAX 5)
@@ -1005,6 +1170,7 @@ function AddProperty() {
             />
           </Button>
         </Grid>
+
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
           <ul>
             {state.picture1Value ? <li>{state.picture1Value.name}</li> : ""}
@@ -1014,12 +1180,14 @@ function AddProperty() {
             {state.picture5Value ? <li>{state.picture5Value.name}</li> : ""}
           </ul>
         </Grid>
+
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
           <Button variant="contained" type="submit" sx={registerBtn}>
             SUBMIT
           </Button>
         </Grid>
       </form>
+
       <Button
         onClick={() => console.log(state.uploadedPictures)}
         disabled={!state.mapInstance}
