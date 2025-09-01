@@ -5,7 +5,7 @@ from .serializers import ListingSerializer
 
 
 class ListingList(generics.ListCreateAPIView):
-    queryset = Listing.objects.all()
+    queryset = Listing.objects.all().order_by('-date_posted')
     serializer_class = ListingSerializer
 
 

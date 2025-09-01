@@ -1,19 +1,22 @@
 import Axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 
 // React leaflet
 import { Icon } from "leaflet";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 // MUI
+import RoomIcon from '@mui/icons-material/Room';
 import {
   AppBar,
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   CardMedia,
   CircularProgress,
   Grid,
+  IconButton,
   Typography,
 } from "@mui/material";
 
@@ -62,6 +65,8 @@ const officeIcon = new Icon({
   iconSize: [40, 40],
 });
 
+
+
 function Listings() {
   // fetch('http://localhost:8000/api/listings/').then(response => response.json()).then(data => {
   //   console.log(data);
@@ -70,6 +75,35 @@ function Listings() {
 
   const [allListings, setAllListings] = useState([]);
   const [dataIsLoading, setDataIsLoading] = useState(true);
+  const mapInitializedRef = useRef(false);
+
+    const initialState = {
+      mapInstance: null,
+    };
+
+    function ReducerFunction(state, action) {
+      switch (action.type) {
+        case "GET_MAP":
+          return { ...state, mapInstance: action.payload };
+        default:
+          return state;
+      }
+    }
+
+    const [state, dispatch] = useReducer(ReducerFunction, initialState);
+
+      function TheMapComponent() {
+        const map = useMap();
+
+        useEffect(() => {
+          if (map && !mapInitializedRef.current) {
+            dispatch({ type: "GET_MAP", payload: map });
+            mapInitializedRef.current = true;
+          }
+        }, [map]);
+
+        return null;
+      }
 
   useEffect(() => {
     const source = Axios.CancelToken.source();
@@ -93,10 +127,6 @@ function Listings() {
     };
   }, []);
 
-  if (!dataIsLoading) {
-    console.log(allListings[0].location);
-  }
-
   if (dataIsLoading) {
     return (
       <Grid
@@ -117,11 +147,11 @@ function Listings() {
           return (
             <Card key={listing.id} sx={cardStyle}>
               <CardHeader
-                // action={
-                //   <IconButton aria-label="settings">
-                //     <MoreVertIcon />
-                //   </IconButton>
-                // }
+                action={
+                  <IconButton aria-label="settings" onClick={()=>state.mapInstance.flyTo([listing.latitude, listing.longitude], 14)}>
+                    <RoomIcon />
+                  </IconButton>
+                }
                 title={listing.title}
               />
               <div style={{ position: "relative" }}>
@@ -153,14 +183,11 @@ function Listings() {
                   {listing.description.substring(0, 2000)}...
                 </Typography>
               </CardContent>
-              {/* <CardActions disableSpacing>
+              <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">
-                  <FavoriteIcon />
+                  {listing.seller_username}
                 </IconButton>
-                <IconButton aria-label="share">
-                  <ShareIcon />
-                </IconButton>
-              </CardActions> */}
+              </CardActions>
             </Card>
           );
         })}
@@ -177,6 +204,7 @@ function Listings() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
+              <TheMapComponent />
               {allListings.map((listing) => {
                 function IconDisplay() {
                   if (listing.listing_type === "House") {

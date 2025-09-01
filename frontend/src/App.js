@@ -10,13 +10,13 @@ import { StyledEngineProvider } from "@mui/material/styles";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 // Components
+import AddProperty from "./Components/AddProperty";
 import Header from "./Components/Header";
 import Home from "./Components/Home";
 import Listings from "./Components/Listings";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Testing from "./Components/Testing";
-import AddProperty from "./Components/AddProperty";
 
 // Contexts
 import DispatchContext from "./Contexts/DispatchContext";

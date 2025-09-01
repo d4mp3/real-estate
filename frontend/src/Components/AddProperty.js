@@ -11,6 +11,8 @@ import {
   useMap,
 } from "react-leaflet";
 
+// Contexts
+import StateContext from "../Contexts/StateContext";
 
 // Boroughs
 import Barking from "./Assets/Boroughs/Barking";
@@ -304,7 +306,7 @@ const rentalFrequencyOptions = [
 function AddProperty() {
   const navigate = useNavigate();
   const mapInitializedRef = useRef(false);
-  const GlobalState = useContext
+	const GlobalState = useContext(StateContext);
 
   const initialState = {
     titleValue: "",
@@ -812,11 +814,12 @@ function AddProperty() {
         formData.append("picture3", state.picture3Value);
         formData.append("picture4", state.picture4Value);
         formData.append("picture5", state.picture5Value);
-        formData.append("seller", state.GlobalState.userId);
+        formData.append("seller", GlobalState.userId);
 
         try {
-          const response = await Axios.post("http://localhost:8000/api/listings/create/", formData)
-          console.log(response);
+          const response = await Axios.post("http://localhost:8000/api/listings/create/", formData);
+          console.log(response.data);
+          navigate("/listings");
         } catch(e) {
           console.log(e.response);
         }
