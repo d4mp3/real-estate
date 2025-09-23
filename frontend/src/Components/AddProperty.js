@@ -495,6 +495,7 @@ function AddProperty() {
     }
   }
 
+  // TODO: get rid of TheMapComponent duplication. It occurs in Listings.js too
   function TheMapComponent() {
     const map = useMap();
 
