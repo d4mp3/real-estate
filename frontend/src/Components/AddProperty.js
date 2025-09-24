@@ -804,7 +804,6 @@ function AddProperty() {
         const response = await Axios.get(
           `http://localhost:8000/api/profiles/${GlobalState.userId}/`
         );
-        console.log(response.data);
         dispatch({
           type: "CATCH_USER_PROFILE_INFO",
           profileObject: response.data,

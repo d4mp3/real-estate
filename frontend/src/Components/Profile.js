@@ -35,15 +35,15 @@ function Profile() {
 		userProfile: {
 			agencyName: "",
 			phoneNumber: "",
-			// profilePic: "",
-			// bio: "",
-			// sellerId: "",
-			// sellerListings: [],
+			profilePic: "",
+			bio: "",
+			sellerId: "",
+			sellerListings: [],
 		},
 		// dataIsLoading: true,
 	};
 
-	function ReducerFuction(state, action) {
+	function ReducerFunction(state, action) {
 		switch (action.type) {
             case "CATCH_USER_PROFILE_INFO":
                 return {
@@ -52,6 +52,10 @@ function Profile() {
                     ...state.userProfile,
                     agencyName: action.profileObject.agency_name ?? "",
                     phoneNumber: action.profileObject.phone_number ?? "",
+                    profilePic: action.profileObject.profile_picture ?? "",
+                    bio: action.profileObject.bio ?? "",
+                    sellerId: action.profileObject.seller ?? "",
+                    sellerListings: action.profileObject.seller_listings ?? [],
                   },
                 };
               default:
@@ -59,7 +63,7 @@ function Profile() {
 		}
 	}
 
-	const [state, dispatch] = useReducer(ReducerFuction, initialState);
+	const [state, dispatch] = useReducer(ReducerFunction, initialState);
 
 	// request to get profile info
 	useEffect(() => {
@@ -68,12 +72,12 @@ function Profile() {
 				const response = await Axios.get(
 					`http://localhost:8000/api/profiles/${GlobalState.userId}/`
 				);
-
+                console.log(response.data);
 				dispatch({
 					type: "CATCH_USER_PROFILE_INFO",
 					profileObject: response.data,
 				});
-				dispatch({ type: "loadingDone" });
+				// dispatch({ type: "loadingDone" });
 			} catch (e) {}
 		}
 		GetProfileInfo();
@@ -176,7 +180,7 @@ function Profile() {
 								variant="h5"
 								style={{ textAlign: "center", marginTop: "1rem" }}
 							>
-								You have {PropertiesDisplay()}
+								{/* You have {PropertiesDisplay()} */}
 							</Typography>
 						</Grid>
 					</Grid>
@@ -200,10 +204,9 @@ function Profile() {
 
 	return (
 		<>
-			<div>Profile Page</div>
-			{/* <div>{WelcomeDisplay()}</div> */}
+			<div>{WelcomeDisplay()}</div>
 
-			{/* <ProfileUpdate userProfile={state.userProfile} /> */}
+			<ProfileUpdate userProfile={state.userProfile} />
 		</>
 	);
 }
