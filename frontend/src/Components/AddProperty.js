@@ -405,15 +405,12 @@ function AddProperty() {
       case "SET_UPLOADED_PICTURES":
         return { ...state, uploadedPictures: action.payload };
       case "CATCH_USER_PROFILE_INFO":
-        console.log("CATCH_USER_PROFILE_INFO");
-        console.log("agencyName", action.agencyName);
-        console.log("phoneNumber", action.phoneNumber);
         return {
           ...state,
           userProfile: {
             ...state.userProfile,
-            agencyName: action.agencyName ?? "",
-            phoneNumber: action.phoneNumber ?? "",
+            agencyName: action.profileObject.agency_name ?? "",
+            phoneNumber: action.profileObject.phone_number ?? "",
           },
         };
       default:
@@ -808,11 +805,9 @@ function AddProperty() {
           `http://localhost:8000/api/profiles/${GlobalState.userId}/`
         );
         console.log(response.data);
-        const { agency_name: agencyName = "", phone_number: phoneNumber = "" } = response?.data ?? {};
         dispatch({
           type: "CATCH_USER_PROFILE_INFO",
-          agencyName: agencyName,
-          phoneNumber: phoneNumber
+          profileObject: response.data,
       })
       } catch(e){
         console.log(e.response)

@@ -96,6 +96,11 @@ function Header() {
     }
   }
 
+  function HandleProfile() {
+    setAnchorEl(null);
+    navigate("/profile");
+  }
+
   return (
     <AppBar position="static" sx={{ backgroundColor: "black" }}>
       <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -149,7 +154,7 @@ function Header() {
               },
             }}
           >
-            <MenuItem sx={profileButtonStyle} onClick={handleClose}>
+            <MenuItem sx={profileButtonStyle} onClick={HandleProfile}>
               Profile
             </MenuItem>
             <MenuItem sx={logoutButtonStyle} onClick={handleLogout}>

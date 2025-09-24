@@ -16,6 +16,7 @@ import Home from "./Components/Home";
 import Listings from "./Components/Listings";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import Profile from "./Components/Profile";
 import Testing from "./Components/Testing";
 
 // Contexts
@@ -88,6 +89,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/add-property" element={<AddProperty />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/listings" element={<Listings />} />
               <Route path="/testing" element={<Testing />} />
             </Routes>
