@@ -337,6 +337,10 @@ function AddProperty() {
       lng: "-0.09",
     },
     uploadedPictures: [],
+    userProfile: {
+      agencyName: "",
+      phoneNumber: "",
+    }
   };
 
   function ReducerFunction(state, action) {
@@ -400,6 +404,18 @@ function AddProperty() {
         };
       case "SET_UPLOADED_PICTURES":
         return { ...state, uploadedPictures: action.payload };
+      case "CATCH_USER_PROFILE_INFO":
+        console.log("CATCH_USER_PROFILE_INFO");
+        console.log("agencyName", action.agencyName);
+        console.log("phoneNumber", action.phoneNumber);
+        return {
+          ...state,
+          userProfile: {
+            ...state.userProfile,
+            agencyName: action.agencyName ?? "",
+            phoneNumber: action.phoneNumber ?? "",
+          },
+        };
       default:
         return state;
     }
@@ -784,6 +800,27 @@ function AddProperty() {
     }
   }, [state.uploadedPictures]);
 
+  // request to get profile info
+  useEffect(()=>{
+    async function GetProfileInfo(){
+      try {
+        const response = await Axios.get(
+          `http://localhost:8000/api/profiles/${GlobalState.userId}/`
+        );
+        console.log(response.data);
+        const { agency_name: agencyName = "", phone_number: phoneNumber = "" } = response?.data ?? {};
+        dispatch({
+          type: "CATCH_USER_PROFILE_INFO",
+          agencyName: agencyName,
+          phoneNumber: phoneNumber
+      })
+      } catch(e){
+        console.log(e.response)
+      }
+    }
+    GetProfileInfo();
+  }, []);
+
   function FormSubmit(e) {
     e.preventDefault();
     console.log("Form submitted");
@@ -848,6 +885,55 @@ function AddProperty() {
     } else {
       return "Price*";
     }
+  }
+
+  function SubmitButtonDisplay() {
+    if (
+      GlobalState.userIsLogged &&
+      state.userProfile.agencyName !== null &&
+      state.userProfile.agencyName !== "" &&
+      state.userProfile.phoneNumber !== null &&
+      state.userProfile.phoneNumber !== ""
+    ) {
+      return (
+        <Button
+          variant="contained"
+          fullWidth
+          type="submit"
+          sx={registerBtn}>
+            SUBMIT
+        </Button>
+      );
+    } else if (
+      GlobalState.userIsLogged && (
+        state.userProfile.agencyName === null ||
+        state.userProfile.agencyName === "" ||
+        state.userProfile.phoneNumber === null ||
+        state.userProfile.phoneNumber === ""
+      )
+    ) {
+      console.log("agencyName", state.userProfile.agencyName);
+      console.log("phoneNumber", state.userProfile.phoneNumber);
+      return (
+        <Button
+          variant="outlined"
+          fullWidth
+          onClick={() => navigate("/profile")}
+          sx={registerBtn}>
+            COMPLETE YOUR PROFILE TO ADD A PROPERTY
+        </Button>
+      );
+    } else if (!GlobalState.userIsLogged) {
+      return (
+        <Button
+          variant="outlined"
+          fullWidth
+          onClick={() => navigate("/login")}
+          sx={registerBtn}>
+            SIGN IN TO ADD A PROPERTY
+        </Button>
+        );
+      }
   }
 
   return (
@@ -1186,9 +1272,7 @@ function AddProperty() {
         </Grid>
 
         <Grid container justifyContent="center" sx={{ marginTop: "1rem" }}>
-          <Button variant="contained" type="submit" sx={registerBtn}>
-            SUBMIT
-          </Button>
+          {SubmitButtonDisplay()}
         </Grid>
       </form>
 
