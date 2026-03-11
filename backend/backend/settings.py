@@ -96,11 +96,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'real_estate_db',
-        'USER': 'postgres',
+        'NAME': os.environ.get('POSTGRES_DB', 'real_estate_db'),
+        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'HOST': os.environ.get('POSTGRES_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
     }
 }
 
