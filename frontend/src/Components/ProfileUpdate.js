@@ -1,31 +1,23 @@
-import React, { useEffect, useState, useRef, useMemo, useContext, useReducer } from "react";
-import { useNavigate } from "react-router";
 import Axios from "axios";
+import { useContext, useEffect, useReducer } from "react";
+import { useNavigate } from "react-router";
 
 // Contexts
 import StateContext from "../Contexts/StateContext";
 
 // MUI
 import {
-	Grid,
-	AppBar,
-	Typography,
 	Button,
-	Card,
-	CardHeader,
-	CardMedia,
-	CardContent,
-	CircularProgress,
-	TextField,
-	FormControlLabel,
-	Checkbox,
+	Grid,
 	Snackbar,
+	TextField,
+	Typography
 } from "@mui/material";
 
 function ProfileUpdate(props) {
 	const navigate = useNavigate();
 	const GlobalState = useContext(StateContext);
-  console.log("props.userProfile", props.userProfile);
+  	console.log("props.userProfile", props.userProfile);
 
 	const initialState = {
 		agencyNameValue: props.userProfile.agencyName ?? "",
@@ -83,27 +75,27 @@ function ProfileUpdate(props) {
 
 	const [state, dispatch] = useReducer(ReducerFunction, initialState);
 
-	// // Sync incoming userProfile props into local reducer state when they change
-	// useEffect(() => {
-	// 	if (props.userProfile) {
-	// 		dispatch({
-	// 			type: "CATCH_AGENCY_CHANGE",
-	// 			agencyNameChosen: props.userProfile.agencyName ?? "",
-	// 		});
-	// 		dispatch({
-	// 			type: "CATCH_PHONE_NUMBER_CHANGE",
-	// 			phoneNumberChosen: props.userProfile.phoneNumber ?? "",
-	// 		});
-	// 		dispatch({
-	// 			type: "CATCH_BIO_CHANGE",
-	// 			bioChosen: props.userProfile.bio ?? "",
-	// 		});
-	// 		dispatch({
-	// 			type: "CATCH_PROFILE_PICTURE_CHANGE",
-	// 			profilePictureChosen: props.userProfile.profilePic ?? "",
-	// 		});
-	// 	}
-	// }, [props.userProfile]);
+	// Sync incoming userProfile props into local reducer state when they change
+	useEffect(() => {
+		if (props.userProfile) {
+			dispatch({
+				type: "CATCH_AGENCY_CHANGE",
+				agencyNameChosen: props.userProfile.agencyName ?? "",
+			});
+			dispatch({
+				type: "CATCH_PHONE_NUMBER_CHANGE",
+				phoneNumberChosen: props.userProfile.phoneNumber ?? "",
+			});
+			dispatch({
+				type: "CATCH_BIO_CHANGE",
+				bioChosen: props.userProfile.bio ?? "",
+			});
+			dispatch({
+				type: "CATCH_PROFILE_PICTURE_CHANGE",
+				profilePictureChosen: props.userProfile.profilePic ?? "",
+			});
+		}
+	}, [props.userProfile]);
 
 	// Use effect to cath uploaded picture
 	useEffect(() => {
@@ -120,26 +112,22 @@ function ProfileUpdate(props) {
 		if (state.sendRequest) {
 			async function UpdateProfile() {
 				const formData = new FormData();
+				formData.append("agency_name", state.agencyNameValue);
+				formData.append("phone_number", state.phoneNumberValue);
+				formData.append("bio", state.bioValue);
+				formData.append("seller", GlobalState.userId);
 
-				if (
-					typeof state.profilePictureValue === "string" ||
-					state.profilePictureValue === null
-				) {
-					formData.append("agency_name", state.agencyNameValue);
-					formData.append("phone_number", state.phoneNumberValue);
-					formData.append("bio", state.bioValue);
-					formData.append("seller", GlobalState.userId);
-				} else {
-					formData.append("agency_name", state.agencyNameValue);
-					formData.append("phone_number", state.phoneNumberValue);
-					formData.append("bio", state.bioValue);
-					formData.append("profile_picture", state.profilePictureValue);
-					formData.append("seller", GlobalState.userId);
+				const hasNewProfilePicture =
+						state.profilePictureValue !== null &&
+						typeof state.profilePictureValue !== "string";
+
+				if (hasNewProfilePicture) {
+						formData.append("profile_picture", state.profilePictureValue);
 				}
 
 				try {
 					const response = await Axios.patch(
-						`https://www.lbrepcourseapi.com/api/profiles/${GlobalState.userId}/update/`,
+						`http://localhost:8000/api/profiles/${GlobalState.userId}/update/`,
 						formData
 					);
 

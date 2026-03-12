@@ -26,7 +26,8 @@ urlpatterns = [
     path('api/listings/', listings_api_views.ListingList.as_view(), name='listing-list'),
     path('api/listings/create/', listings_api_views.ListingCreate.as_view(), name='listing-create'),
     path('api/profiles/', users_api_views.ProfileList.as_view(), name='profiles'),
-    path('api/profiles/<int:seller>/', users_api_views.ProfileDetail.as_view()),
+    path('api/profiles/<int:seller>/', users_api_views.ProfileDetail.as_view(), name='profile-detail'),
+    path('api/profiles/<int:seller>/update/', users_api_views.ProfileUpdate.as_view(), name='profile-update'),
     path('api-auth-djoser/', include('djoser.urls')),
     path('api-auth-djoser/', include('djoser.urls.authtoken')),
 

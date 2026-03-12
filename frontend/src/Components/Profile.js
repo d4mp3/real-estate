@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef, useMemo, useContext, useReducer } from "react";
-import { useNavigate } from "react-router";
 import Axios from "axios";
+import { useContext, useEffect, useReducer } from "react";
+import { useNavigate } from "react-router";
 
 // Contexts
 import StateContext from "../Contexts/StateContext";
@@ -13,18 +13,10 @@ import ProfileUpdate from "./ProfileUpdate";
 
 // MUI
 import {
-	Grid,
-	AppBar,
-	Typography,
 	Button,
-	Card,
-	CardHeader,
-	CardMedia,
-	CardContent,
 	CircularProgress,
-	TextField,
-	FormControlLabel,
-	Checkbox,
+	Grid,
+	Typography
 } from "@mui/material";
 
 function Profile() {
@@ -40,7 +32,7 @@ function Profile() {
 			sellerId: "",
 			sellerListings: [],
 		},
-		// dataIsLoading: true,
+		dataIsLoading: false,
 	};
 
 	function ReducerFunction(state, action) {
@@ -77,7 +69,7 @@ function Profile() {
 					type: "CATCH_USER_PROFILE_INFO",
 					profileObject: response.data,
 				});
-				// dispatch({ type: "loadingDone" });
+				dispatch({ type: "loadingDone" });
 			} catch (e) {}
 		}
 		GetProfileInfo();
