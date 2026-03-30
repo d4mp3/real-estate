@@ -32,7 +32,7 @@ function Profile() {
 			sellerId: "",
 			sellerListings: [],
 		},
-		dataIsLoading: false,
+		dataIsLoading: true,
 	};
 
 	function ReducerFunction(state, action) {
@@ -50,6 +50,8 @@ function Profile() {
                     sellerListings: action.profileObject.seller_listings ?? [],
                   },
                 };
+			case "LOADING_DONE":
+				return { ...state, dataIsLoading: false };
               default:
                 return state;
 		}
@@ -69,7 +71,7 @@ function Profile() {
 					type: "CATCH_USER_PROFILE_INFO",
 					profileObject: response.data,
 				});
-				dispatch({ type: "loadingDone" });
+				dispatch({ type: "LOADING_DONE" });
 			} catch (e) {}
 		}
 		GetProfileInfo();
@@ -143,7 +145,7 @@ function Profile() {
 						<img
 							style={{ height: "10rem", width: "15rem" }}
 							src={
-								state.userProfile.profilePic !== null
+								state.userProfile.profilePic
 									? state.userProfile.profilePic
 									: defaultProfilePicture
 							}
@@ -172,7 +174,7 @@ function Profile() {
 								variant="h5"
 								style={{ textAlign: "center", marginTop: "1rem" }}
 							>
-								{/* You have {PropertiesDisplay()} */}
+								You have {PropertiesDisplay()}
 							</Typography>
 						</Grid>
 					</Grid>
