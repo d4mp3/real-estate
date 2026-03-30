@@ -8,11 +8,9 @@ User = get_user_model()
 
 
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(seller=instance)
+def ensure_user_profile(sender, instance, raw=False, **kwargs):
+    if raw:
+        return
 
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+    # Keep profile existence idempotent for all user saves, including logins.
+    Profile.objects.get_or_create(seller=instance)

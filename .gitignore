@@ -3,5 +3,7 @@
 __pycache__/
 .github/
 .agents/
+.vscode/
+.idea/
 
 **/superpowers/**
