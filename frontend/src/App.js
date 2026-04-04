@@ -11,12 +11,13 @@ import { BrowserRouter, Route, Routes } from "react-router";
 
 // Components
 import AddProperty from "./Components/AddProperty";
+import Agencies from "./Components/Agencies";
 import Header from "./Components/Header";
 import Home from "./Components/Home";
 import Listings from "./Components/Listings";
 import Login from "./Components/Login";
-import Register from "./Components/Register";
 import Profile from "./Components/Profile";
+import Register from "./Components/Register";
 import Testing from "./Components/Testing";
 
 // Contexts
@@ -92,6 +93,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/listings" element={<Listings />} />
               <Route path="/testing" element={<Testing />} />
+              <Route path="/agencies" element={<Agencies />} />
             </Routes>
           </BrowserRouter>
         </StyledEngineProvider>

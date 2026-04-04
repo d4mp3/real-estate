@@ -1,21 +1,21 @@
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router";
 import Axios from "axios";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router";
 
 // MUI imports
 import {
   AppBar,
   Box,
   Button,
-  Toolbar,
-  Typography,
   Menu,
   MenuItem,
+  Toolbar,
+  Typography,
 } from "@mui/material";
 
 // Contexts
-import StateContext from "../Contexts/StateContext";
 import DispatchContext from "../Contexts/DispatchContext";
+import StateContext from "../Contexts/StateContext";
 
 const addPropertyButtonStyle = {
   backgroundColor: "green",

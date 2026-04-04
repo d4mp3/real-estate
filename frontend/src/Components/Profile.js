@@ -152,7 +152,7 @@ function Profile() {
 						/>
 					</Grid>
 					<Grid
-						item
+						itemccc
 						container
 						direction="column"
 						justifyContent="center"
