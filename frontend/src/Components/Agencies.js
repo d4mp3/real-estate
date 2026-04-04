@@ -85,6 +85,22 @@ function Agencies() {
       }}
     >
       {state.agenciesList.map((agency) => {
+        function PropertiesDisplay() {
+          if (agency.seller_listings.length === 0) {
+            return (
+              <Button disabled size="small"> No Properties</Button>
+            );
+          } else if (agency.seller_listings.length === 1) {
+            return (
+              <Button size="small">One Property</Button>
+            );
+          } else {
+            return (
+              <Button size="small">{agency.seller_listings.length} Properties</Button>
+            );
+          }
+        }
+
         if (agency.agency_name && agency.phone_number)
           return (
             <Grid
@@ -107,7 +123,7 @@ function Agencies() {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small">X Properties</Button>
+                  {PropertiesDisplay()}
                 </CardActions>
               </Card>
             </Grid>
