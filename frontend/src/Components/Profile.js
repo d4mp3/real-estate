@@ -109,22 +109,6 @@ function Profile() {
 		}
 	}
 
-	function PropertiesDisplay() {
-		if (state.userProfile.sellerListings.length === 0) {
-		return (
-			<Button disabled size="small"> No Properties</Button>
-		);
-		} else if (state.userProfile.sellerListings.length === 1) {
-		return (
-			<Button size="small">One Property</Button>
-		);
-		} else {
-		return (
-			<Button size="small">{state.userProfile.sellerListings.length} Properties</Button>
-		);
-		}
-	}
-
 	function WelcomeDisplay() {
 		if (
 			state.userProfile.agencyName === null ||

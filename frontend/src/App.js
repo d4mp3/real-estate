@@ -19,6 +19,7 @@ import Login from "./Components/Login";
 import Profile from "./Components/Profile";
 import Register from "./Components/Register";
 import Testing from "./Components/Testing";
+import AgencyDetail from "./Components/AgencyDetail";
 
 // Contexts
 import DispatchContext from "./Contexts/DispatchContext";
@@ -94,6 +95,7 @@ function App() {
               <Route path="/listings" element={<Listings />} />
               <Route path="/testing" element={<Testing />} />
               <Route path="/agencies" element={<Agencies />} />
+              <Route path="/agencies/:id" element={<AgencyDetail />} />
             </Routes>
           </BrowserRouter>
         </StyledEngineProvider>

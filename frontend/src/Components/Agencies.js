@@ -74,7 +74,6 @@ function Agencies() {
 		);
 	}
 
-
   return (
     <Grid
       container
@@ -88,15 +87,21 @@ function Agencies() {
         function PropertiesDisplay() {
           if (agency.seller_listings.length === 0) {
             return (
-              <Button disabled size="small"> No Properties</Button>
+              <Button disabled size="small">
+                No Properties
+              </Button>
             );
           } else if (agency.seller_listings.length === 1) {
             return (
-              <Button size="small">One Property</Button>
+              <Button size="small" onClick={() => navigate(`/agencies/${agency.id}`)}>
+                One Property
+              </Button>
             );
           } else {
             return (
-              <Button size="small">{agency.seller_listings.length} Properties</Button>
+              <Button size="small" onClick={() => navigate(`/agencies/${agency.id}`)}>
+                {agency.seller_listings.length} Properties
+              </Button>
             );
           }
         }
