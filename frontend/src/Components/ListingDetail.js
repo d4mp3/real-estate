@@ -1,21 +1,10 @@
 import Axios from "axios";
-import { useContext, useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-
-// Contexts
-import StateContext from "../Contexts/StateContext";
-
-// Assets
-import defaultProfilePicture from "./Assets/defaultProfilePicture.jpg";
-
 
 // MUI
 import {
-	Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
+  Box,
   IconButton,
   Breadcrumbs,
   Link,
@@ -24,17 +13,18 @@ import {
 	Typography
 } from "@mui/material";
 
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+
 
 
 function ListingDetail() {
   const navigate = useNavigate();
-	const GlobalState = useContext(StateContext);
   const params = useParams();
 
 	const initialState = {
 		dataIsLoading: true,
-    listingInfo: "",
+		listingInfo: {},
 	};
 
 	function ReducerFunction(state, action) {
@@ -42,7 +32,7 @@ function ListingDetail() {
       case "CATCH_LISTING_INFO":
         return {
           ...state,
-          listingInfo: action.listingObject ?? "",
+          listingInfo: action.listingObject ?? {},
       };
 			case "LOADING_DONE":
 				return { ...state, dataIsLoading: false };
@@ -69,6 +59,36 @@ function ListingDetail() {
 		}
 		GetListingInfo();
 	}, []);
+
+  const listingPictures = [
+    state.listingInfo?.picture1,
+    state.listingInfo?.picture2,
+    state.listingInfo?.picture3,
+    state.listingInfo?.picture4,
+    state.listingInfo?.picture5,
+  ].filter(Boolean);
+
+  const [currentPicture, setCurrentPicture] = useState(0);
+
+  function NextPicture() {
+    if (listingPictures.length === 0) return;
+
+    if (currentPicture === listingPictures.length - 1) {
+      setCurrentPicture(0);
+    } else {
+      setCurrentPicture(currentPicture + 1);
+    }
+  }
+
+  function PreviousPicture() {
+    if (listingPictures.length === 0) return;
+
+    if (currentPicture === 0) {
+      setCurrentPicture(listingPictures.length - 1);
+    } else {
+      setCurrentPicture(currentPicture - 1);
+    }
+  }
 
 	if (state.dataIsLoading === true) {
 		return (
@@ -98,6 +118,55 @@ function ListingDetail() {
           <Typography sx={{ color: 'text.primary' }}>{state.listingInfo.title}</Typography>
         </Breadcrumbs>
       </Grid>
+      {/* Image slider */}
+      {listingPictures.length > 0 ? (
+        <Grid item container justifyContent="center" sx={{ mt: 2 }}>
+          <Box
+            sx={{
+              position: 'relative',
+              width: { xs: '100%', md: '45rem' },
+              maxWidth: '45rem',
+              height: { xs: '18rem', md: '35rem' },
+              overflow: 'hidden',
+              borderRadius: 1,
+            }}
+          >
+            <img
+              src={listingPictures[currentPicture]}
+              alt={`Listing ${currentPicture + 1}`}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+
+            <IconButton
+              onClick={PreviousPicture}
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: 8,
+                transform: 'translateY(-50%)',
+                bgcolor: 'rgba(0, 0, 0, 0.45)',
+                '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.7)' },
+              }}
+            >
+              <ArrowCircleLeftIcon sx={{ fontSize: '2.2rem', color: '#fff' }} />
+            </IconButton>
+
+            <IconButton
+              onClick={NextPicture}
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                right: 8,
+                transform: 'translateY(-50%)',
+                bgcolor: 'rgba(0, 0, 0, 0.45)',
+                '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.7)' },
+              }}
+            >
+              <ArrowCircleRightIcon sx={{ fontSize: '2.2rem', color: '#fff' }} />
+            </IconButton>
+          </Box>
+        </Grid>
+      ) : ''}
     </div>
   );
 }
