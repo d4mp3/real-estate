@@ -13,8 +13,10 @@ import {
 	Typography
 } from "@mui/material";
 
+import RoomIcon from '@mui/icons-material/Room';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 
 
@@ -90,6 +92,11 @@ function ListingDetail() {
     }
   }
 
+  const date = new Date(state.listingInfo.date_posted);
+  const formattedDate = `${
+    date.getMonth() + 1
+  }/${date.getDate()}/${date.getFullYear()}`;
+
 	if (state.dataIsLoading === true) {
 		return (
 			<Grid
@@ -118,6 +125,7 @@ function ListingDetail() {
           <Typography sx={{ color: 'text.primary' }}>{state.listingInfo.title}</Typography>
         </Breadcrumbs>
       </Grid>
+
       {/* Image slider */}
       {listingPictures.length > 0 ? (
         <Grid item container justifyContent="center" sx={{ mt: 2 }}>
@@ -165,6 +173,79 @@ function ListingDetail() {
               <ArrowCircleRightIcon sx={{ fontSize: '2.2rem', color: '#fff' }} />
             </IconButton>
           </Box>
+        </Grid>
+      ) : ''}
+
+      {/* More Information */}
+      <Grid item container style={{padding: '1rem', border: '1px solid black', marginTop: '1rem'}}>
+        <Grid item container xs={7} direction='column' spacing={1}>
+          <Grid item>
+            <Typography variant="h5">{state.listingInfo.title}</Typography>
+          </Grid>
+          <Grid item>
+            <RoomIcon />{" "}
+            <Typography variant="h6" >
+              {state.listingInfo.borough}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="subtitle1" >{formattedDate}</Typography>
+          </Grid>
+        </Grid>
+        <Grid item container xs={5} alignItems="center" >
+            <Typography variant="h6" style={{fontWeight: 'bolder', color: 'green'}} >
+              {state.listingInfo.listing_type} | {" "}
+              {state.listingInfo.property_status === "Sale"
+                ? `$${state.listingInfo.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                : `$${state.listingInfo.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}/${state.listingInfo.rental_frequency}`}
+            </Typography>
+          </Grid>
+      </Grid>
+
+      <Grid item container justifyContent="flex-start" style={{padding: '1rem', border: '1px solid black', marginTop: '1rem'}}>
+          {state.listingInfo.rooms ? (
+          <Grid item xs={2} style={{display: 'flex'}}>
+            <Typography variant="subtitle1">{state.listingInfo.rooms} Rooms</Typography>
+          </Grid>
+          ) : ''}
+
+        {state.listingInfo.furnished ? (
+          <Grid item xs={2} style={{display: 'flex'}}>
+            <CheckBoxIcon style={{color: 'green', fontSize: "2rem"}} /> <Typography variant="subtitle1">Furnished</Typography>
+          </Grid>
+          ) : ''}
+
+        {state.listingInfo.pool ? (
+          <Grid item xs={2} style={{display: 'flex'}}>
+            <CheckBoxIcon style={{color: 'green', fontSize: "2rem"}} /> <Typography variant="subtitle1">Pool</Typography>
+          </Grid>
+          ) : ''}
+
+        {state.listingInfo.elevator ? (
+          <Grid item xs={2} style={{display: 'flex'}}>
+            <CheckBoxIcon style={{color: 'green', fontSize: "2rem"}} /> <Typography variant="subtitle1">Elevator</Typography>
+          </Grid>
+          ) : ''}
+
+        {state.listingInfo.cctv ? (
+          <Grid item xs={2} style={{display: 'flex'}}>
+            <CheckBoxIcon style={{color: 'green', fontSize: "2rem"}} /> <Typography variant="subtitle1">CCTV</Typography>
+          </Grid>
+          ) : ''}
+
+        {state.listingInfo.parking ? (
+          <Grid item xs={2} style={{display: 'flex'}}>
+            <CheckBoxIcon style={{color: 'green', fontSize: "2rem"}} /> <Typography variant="subtitle1">Parking</Typography>
+          </Grid>
+          ) : ''}
+      </Grid>
+
+
+      {/* Description */}
+      {state.listingInfo.description ? (
+        <Grid item style={{padding: '1rem', border: '1px solid black', marginTop: '1rem'}}>
+          <Typography variant="h5" style={{marginTop: '1rem'}}>Description</Typography>
+          <Typography variant="h6" style={{marginTop: '1rem'}}>{state.listingInfo.description}</Typography>
         </Grid>
       ) : ''}
     </div>
