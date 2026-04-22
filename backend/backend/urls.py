@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/listings/', listings_api_views.ListingList.as_view(), name='listing-list'),
     path('api/listings/create/', listings_api_views.ListingCreate.as_view(), name='listing-create'),
+    path('api/listings/<int:pk>/', listings_api_views.ListingDetail.as_view(), name='listing-detail'),
     path('api/profiles/', users_api_views.ProfileList.as_view(), name='profiles'),
     path('api/profiles/<int:seller>/', users_api_views.ProfileDetail.as_view(), name='profile-detail'),
     path('api/profiles/<int:seller>/update/', users_api_views.ProfileUpdate.as_view(), name='profile-update'),
