@@ -100,7 +100,7 @@ function AgencyDetail() {
 
   return (
     <div>
-      <Grid
+			<Grid
 					container
 					style={{
 						width: "50%",
@@ -143,56 +143,57 @@ function AgencyDetail() {
 								variant="h5"
 								style={{ textAlign: "center", marginTop: "1rem" }}
 							>
-                <IconButton>
-                  <LocalPhoneIcon /> {state.userProfile.phoneNumber}
-                </IconButton>
+								<IconButton>
+									<LocalPhoneIcon /> {state.userProfile.phoneNumber}
+								</IconButton>
 							</Typography>
 						</Grid>
 					</Grid>
-          <Grid item style={{ marginTop: "1rem", padding: "2px" }}>
-            {state.userProfile.bio ? state.userProfile.bio : "No bio provided."}{}
-          </Grid>
-      </Grid>
-      <Grid
-        container
-        justifyContent="flex-start"
-        spacing={2}
-        style={{
-            padding: "10px",
-        }}
-      >
-        {state.userProfile.sellerListings.map((listing) => {
-          return (
-            <Grid
-              item
-              key={listing.id}
-              style={{ marginTop: "1rem", maxWidth: "20rem" }}
-            >
-              <Card>
-                <CardMedia
-                  style={{ height: 140}}
-                  image={
-                    `http://localhost:8000${listing.picture1}` ? `http://localhost:8000${listing.picture1} `: defaultProfilePicture}
-                  alt="Listing Picture"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {listing.title}
-                  </Typography>
-                  <Typography variant="body2" style={{ color: 'text.secondary' }}>
-                    {listing.description.substring(0, 100)}...
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  {listing.property_status === "Sale"
-                    ? `${listing.listing_type}: $ ${listing.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                    : `${listing.listing_type}: $ ${listing.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}/${listing.rental_frequency}`}
-                </CardActions>
-              </Card>
-            </Grid>
-            );
-          })}
-      </Grid>
+					<Grid item style={{ marginTop: "1rem", padding: "2px" }}>
+						{state.userProfile.bio ? state.userProfile.bio : "No bio provided."}{}
+					</Grid>
+			</Grid>
+			<Grid
+				container
+				justifyContent="flex-start"
+				spacing={2}
+				style={{
+						padding: "10px",
+				}}
+			>
+				{state.userProfile.sellerListings.map((listing) => {
+					return (
+						<Grid
+							item
+							key={listing.id}
+							style={{ marginTop: "1rem", maxWidth: "20rem" }}
+						>
+							<Card>
+								<CardMedia
+									style={{ height: 140, cursor: "pointer" }}
+									image={
+										`http://localhost:8000${listing.picture1}` ? `http://localhost:8000${listing.picture1} `: defaultProfilePicture}
+									alt="Listing Picture"
+					onClick={() => navigate(`/listings/${listing.id}`)}
+								/>
+								<CardContent>
+									<Typography gutterBottom variant="h5" component="div">
+										{listing.title}
+									</Typography>
+									<Typography variant="body2" style={{ color: 'text.secondary' }}>
+										{listing.description.substring(0, 100)}...
+									</Typography>
+								</CardContent>
+								<CardActions>
+									{listing.property_status === "Sale"
+										? `${listing.listing_type}: $ ${listing.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+										: `${listing.listing_type}: $ ${listing.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}/${listing.rental_frequency}`}
+								</CardActions>
+							</Card>
+						</Grid>
+						);
+					})}
+			</Grid>
     </div>
   )
 }

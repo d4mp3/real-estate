@@ -1,5 +1,6 @@
 import Axios from "axios";
 import { useEffect, useReducer, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 
 // React leaflet
 import { Icon } from "leaflet";
@@ -36,6 +37,7 @@ const pictureStyle = {
   paddingLeft: "1rem",
   height: "20rem",
   width: "30rem",
+  cursor: "pointer",
 };
 
 // Shared styles for price display
@@ -73,6 +75,7 @@ function Listings() {
 
   // })
 
+  const navigate = useNavigate();
   const [allListings, setAllListings] = useState([]);
   const [dataIsLoading, setDataIsLoading] = useState(true);
   const mapInitializedRef = useRef(false);
@@ -160,6 +163,7 @@ function Listings() {
                   component="img"
                   image={listing.picture1}
                   alt={listing.title}
+                  onClick={() => navigate(`/listings/${listing.id}`)}
                 />
                 {listing.property_status === "Sale" ? (
                   <Typography sx={priceTagStyle}>
@@ -226,12 +230,17 @@ function Listings() {
                       <img
                         src={listing.picture1}
                         alt="Example"
-                        style={{ width: "18rem", height: "14rem" }}
+                        style={{ width: "18rem", height: "14rem", cursor: "pointer" }}
+                        onClick ={() => navigate(`/listings/${listing.id}`)}
                       />
                       <Typography variant="body1">
                         {listing.description.substring(0, 150)}...
                       </Typography>
-                      <Button variant="contained" fullWidth>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        onClick={() => navigate(`/listings/${listing.id}`)}
+                      >
                         Details
                       </Button>
                     </Popup>
